@@ -74,10 +74,17 @@ export default {
     }
   },
   created () {
+    this.fetchdata()
   },
   methods: {
     onItemClick(data){
       this.$router.push({name: 'home', params: data})
+    },
+    async fetchdata(){
+      await this.$get(this, 'mobile/getCategories')
+      .then(({data}) => {
+        this.$store.dispatch('categories/setCategories', data.data)
+      })
     }
   }
 }

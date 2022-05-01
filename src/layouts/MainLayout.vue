@@ -68,12 +68,61 @@
       </div>
       <router-view />
     </q-page-container>
+
+    <div class="q-pa-md" v-if="manualinput">
+      <div class="q-gutter-md text-center">
+        <small>MANUAL INPUT DATA CUSTOMIZED NEW DATA</small>
+        <q-input outlined v-model="mid.voltampred" label="Set Volt-Ampered"/>
+        <q-input outlined v-model="mid.descname" label="Set Description Name"/>
+        <q-input outlined v-model="mid.pcs" label="Enter No. Of Pieces"/>
+        <q-input outlined v-model="mid.enterlength" label="Enter Length (m)"/>
+        <q-select
+          filled
+          v-model="mid.category"
+          label="Select Category"
+          :options="categoriesprop"
+          behavior="menu"
+          emit-value
+        ></q-select>
+        <q-btn @click="manualinput = !manualinput">save</q-btn>
+      </div>
+    </div>
+
+    <!--
+      FAB
+     -->
+    <div class="q-pa-md" style="position: fixed; bottom: 0; right: 0;">
+      <div class="row justify-between">
+        <q-fab
+          v-model="fabRight"
+          vertical-actions-align="right"
+          color="primary"
+          glossy
+          icon="keyboard_arrow_up"
+          direction="up"
+        >
+          <q-fab-action
+            v-for="(fab, fabindex) in fabdata"
+            :key="fabindex"
+            :label-position="fab.label_position"
+            :color="fab.color"
+            :icon="fab.icon"
+            :label="fab.label"
+            @click="onClick(fab.click)"
+          >
+          </q-fab-action>
+        </q-fab>
+      </div>
+    </div>
+    <!--
+      FAB END
+     -->
   </q-layout>
 </template>
 
 <script>
 import EssentialLink from 'components/EssentialLink.vue'
-
+import { mapGetters } from 'vuex'
 const linksData = [
   {
     title: 'Home',
@@ -158,15 +207,105 @@ export default {
             {
               id: 5,
               title: 'LINE (2 WIRES)'
+            },
+            {
+              id: 6,
+              title: 'Ground (1 wire)'
+            },
+            {
+              id: 7,
+              title: 'Conduit'
+            },
+            {
+              id: 8,
+              title: 'Length (m)'
+            },
+            {
+              id: 9,
+              title: 'VD (v)'
+            },
+            {
+              id: 10,
+              title: 'VD% (%)'
             }
           ]
         },
+      ],
+      fabdata: [
+        {
+          id:               1,
+          label_position:   'left',
+          color:            'primary',
+          icon:             'add',
+          label:            'Input Preset Data',
+          click:            'ipd'
+        },
+        {
+          id:               2,
+          label_position:   'left',
+          color:            'primary',
+          icon:             'add',
+          label:            'Manual Input Data',
+          click:            'mid'
+        }
+      ],
+      fabRight: true,
+      manualinput: false,
+      mid: {
+        voltampred: null,
+        descname: null,
+        pcs: null,
+        enterlength: null,
+        category: null
+      },
+      categoriesprop: [
+        {
+          label:  'Cooking',
+          value:  'Cooking'
+        },
+        {
+          label:  'Cooling',
+          value:  'Cooling'
+        },
+        {
+          label:  'Dryer',
+          value:  'Dryer'
+        },
+        {
+          label:  'Heating',
+          value:  'Heating'
+        },
+        {
+          label:  'LO.CO',
+          value:  'LO.CO'
+        },
+        {
+          label:  'OTHERS',
+          value:  'OTHERS'
+        }
       ]
     }
   },
   created () {
     this.title = this.$route.params
-    console.log(this.title)
+  },
+  methods : {
+    onItemClick(data){
+      console.log(data)
+    },
+    onClick(data){
+      if(data === 'ipd'){
+        console.log(data)
+      }else if(data === 'mid'){
+        console.log('mid')
+        this.manualinput = true
+      }
+    }
+  },
+  computed : {
+    ...mapGetters({
+      categories:     'categories/getCategories'
+    })
   },
   watch: {
   }
