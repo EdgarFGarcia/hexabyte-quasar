@@ -16,7 +16,8 @@ const routes = [
     children: [
       {
         path: '',
-        component: () => import('pages/index.vue')
+        name: 'home',
+        component: () => import('pages/home/manualinputpreset.vue')
       }
     ]
   },

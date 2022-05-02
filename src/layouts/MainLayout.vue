@@ -1,7 +1,7 @@
 <template>
   <q-layout view="lHh Lpr lFf">
     <q-header elevated>
-      <q-toolbar>
+      <q-toolbar style="background: black;">
         <q-btn
           flat
           dense
@@ -47,7 +47,7 @@
         <q-btn-dropdown
           color="white"
           class="text-black pr-12 pl-12"
-          :label="item.title"
+          :label="Object.keys(selecteddd).length !== 0 ? selecteddd.title : item.title"
           dropdown-icon="change_history"
           style="width: 100%;"
         >
@@ -60,33 +60,14 @@
               @click="onItemClick(iitem)"
             >
               <q-item-section>
-                {{iitem.title}}
+                <label>{{iitem.title}}</label>
               </q-item-section>
             </q-item>
           </q-list>
         </q-btn-dropdown>
       </div>
-      <router-view />
+      <router-view/>
     </q-page-container>
-
-    <div class="q-pa-md" v-if="manualinput">
-      <div class="q-gutter-md text-center">
-        <small>MANUAL INPUT DATA CUSTOMIZED NEW DATA</small>
-        <q-input outlined v-model="mid.voltampred" label="Set Volt-Ampered"/>
-        <q-input outlined v-model="mid.descname" label="Set Description Name"/>
-        <q-input outlined v-model="mid.pcs" label="Enter No. Of Pieces"/>
-        <q-input outlined v-model="mid.enterlength" label="Enter Length (m)"/>
-        <q-select
-          filled
-          v-model="mid.category"
-          label="Select Category"
-          :options="categoriesprop"
-          behavior="menu"
-          emit-value
-        ></q-select>
-        <q-btn @click="manualinput = !manualinput">save</q-btn>
-      </div>
-    </div>
 
     <!--
       FAB
@@ -96,7 +77,7 @@
         <q-fab
           v-model="fabRight"
           vertical-actions-align="right"
-          color="primary"
+          color="black"
           glossy
           icon="keyboard_arrow_up"
           direction="up"
@@ -235,7 +216,7 @@ export default {
         {
           id:               1,
           label_position:   'left',
-          color:            'primary',
+          color:            'black',
           icon:             'add',
           label:            'Input Preset Data',
           click:            'ipd'
@@ -243,68 +224,55 @@ export default {
         {
           id:               2,
           label_position:   'left',
-          color:            'primary',
+          color:            'black',
           icon:             'add',
           label:            'Manual Input Data',
           click:            'mid'
         }
       ],
       fabRight: true,
-      manualinput: false,
-      mid: {
-        voltampred: null,
-        descname: null,
-        pcs: null,
-        enterlength: null,
-        category: null
-      },
-      categoriesprop: [
-        {
-          label:  'Cooking',
-          value:  'Cooking'
-        },
-        {
-          label:  'Cooling',
-          value:  'Cooling'
-        },
-        {
-          label:  'Dryer',
-          value:  'Dryer'
-        },
-        {
-          label:  'Heating',
-          value:  'Heating'
-        },
-        {
-          label:  'LO.CO',
-          value:  'LO.CO'
-        },
-        {
-          label:  'OTHERS',
-          value:  'OTHERS'
-        }
-      ]
     }
   },
   created () {
     this.title = this.$route.params
   },
   methods : {
-    onItemClick(data){
-      console.log(data)
-    },
     onClick(data){
       if(data === 'ipd'){
-        console.log(data)
+        this.$store.dispatch('userdata/setispresetdata', true)
       }else if(data === 'mid'){
-        console.log('mid')
-        this.manualinput = true
+        this.$store.dispatch('userdata/setismanualinput', true)
       }
-    }
+    },
+    onItemClick(data){
+      this.$store.dispatch('userdata/setselectedvariable', data.title)
+      switch(data.id){
+        case 1:
+          this.$store.dispatch('userdata/showvoltage')
+          break;
+        case 2:
+          this.$store.dispatch('userdata/showvoltampere')
+          break;
+        case 3:
+          this.$store.dispatch('userdata/showcurrent')
+          break;
+        case 4:
+          this.$store.dispatch('userdata/showcircuitbreaker')
+          break;
+        case 5:
+          this.$store.dispatch('userdata/showtwolines')
+          break;
+        case 6:
+          this.$store.dispatch('userdata/showgoundwire')
+          break;
+      }
+      this.$store.dispatch('userdata/setselecteddd', data)
+    },
   },
   computed : {
     ...mapGetters({
-      categories:     'categories/getCategories'
+      categories:             'categories/getCategories',
+      selecteddd:             'userdata/getselecteddd'
     })
   },
   watch: {

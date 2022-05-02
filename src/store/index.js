@@ -5,6 +5,7 @@ import createPersistedState from 'vuex-persistedstate'
 // import example from './module-example'
 
 import categories from './values/categories.js'
+import userdata from './values/userdata.js'
 
 Vue.use(Vuex)
 
@@ -21,7 +22,8 @@ export default function (/* { ssrContext } */) {
   const Store = new Vuex.Store({
     modules: {
       // example
-      categories:     categories
+      categories:     categories,
+      userdata:       userdata
     },
     plugins: [createPersistedState()],
     // enable strict mode (adds overhead!)

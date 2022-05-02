@@ -83,7 +83,33 @@ export default {
     async fetchdata(){
       await this.$get(this, 'mobile/getCategories')
       .then(({data}) => {
-        this.$store.dispatch('categories/setCategories', data.data)
+        if(data.response){
+          this.$store.dispatch('categories/setCategories', data.data)
+        }
+      })
+      await this.$get(this, 'mobile/getParentCategories')
+      .then(({data}) => {
+        if(data.response){
+          this.$store.dispatch('categories/setparent_categories', data.data)
+        }
+      })
+      await this.$get(this, 'mobile/getchildcategories')
+      .then(({data}) => {
+        if(data.response){
+          this.$store.dispatch('categories/setchild_categories', data.data)
+        }
+      })
+      await this.$get(this, 'mobile/getBreaker')
+      .then(({data}) => {
+        if(data.response){
+          this.$store.dispatch('userdata/setcbreaker', data.data)
+        }
+      })
+      await this.$get(this, 'mobile/getWireConduit')
+      .then(({data}) => {
+        if(data.response){
+          this.$store.dispatch('userdata/setwiredconduit', data.data)
+        }
       })
     }
   }
