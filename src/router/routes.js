@@ -10,7 +10,7 @@ const routes = [
     component: () => import('pages/selection.vue')
   },
   {
-    path: '/home/:data',
+    path: '/home',
     name: 'home',
     component: () => import('layouts/MainLayout.vue'),
     children: [
