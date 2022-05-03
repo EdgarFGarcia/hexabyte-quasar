@@ -12,7 +12,7 @@
         />
 
         <q-toolbar-title>
-          {{title.parent}} - {{title.title}}
+          {{getnavigation.parent}} - {{getnavigation.title}}
         </q-toolbar-title>
       </q-toolbar>
     </q-header>
@@ -38,7 +38,7 @@
       </q-list>
     </q-drawer>
 
-    <q-page-container>
+    <q-page-container v-if="getshowddcalc">
       <div 
         class="q-pa-md"
         v-for="(item, itemIndex) in dditems"
@@ -152,6 +152,12 @@ const linksData = [
     caption: 'export',
     router: 'export',
     icon: 'file_download',
+  },
+  {
+    title: 'Back',
+    caption: 'Go To Selection Page',
+    router: 'selection',
+    icon: 'arrow_left'
   }
 ];
 
@@ -233,8 +239,13 @@ export default {
       fabRight: true,
     }
   },
+  mounted () {
+    // console.log('here mounted')
+    // this.$store.dispatch('topnav/setshowddcalc', true)
+  },
   created () {
-    this.title = this.$route.params
+    // console.log('here')
+    // this.$store.dispatch('topnav/setshowddcalc', true)
   },
   methods : {
     onClick(data){
@@ -265,6 +276,18 @@ export default {
         case 6:
           this.$store.dispatch('userdata/showgoundwire')
           break;
+        case 7:
+          this.$store.dispatch('userdata/showconduit')
+          break;
+        case 8:
+          this.$store.dispatch('userdata/showlength')
+          break;
+        case 9:
+          this.$store.dispatch('userdata/showvoltagedrop')
+          break;
+        case 10:
+          this.$store.dispatch('userdata/showvoltagepercent')
+          break;
       }
       this.$store.dispatch('userdata/setselecteddd', data)
     },
@@ -272,7 +295,9 @@ export default {
   computed : {
     ...mapGetters({
       categories:             'categories/getCategories',
-      selecteddd:             'userdata/getselecteddd'
+      selecteddd:             'userdata/getselecteddd',
+      getnavigation:          'topnav/getnavigation',
+      getshowddcalc:          'topnav/getshowddcalc'
     })
   },
   watch: {

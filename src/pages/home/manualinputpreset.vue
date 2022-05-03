@@ -89,6 +89,15 @@
             </div>
         </div>
         <div class="q-pa-md" v-if="!getismanualinput && !getispresetdata && !changecircuitbreaker && !changetwowire">
+            <!--voltage {{getisvoltage}}<br/>
+            volt amp {{getisvoltamp}}<br/>
+            current {{getiscurrent}}<br/>
+            circuit breaker {{getiscircuitbreaker}}<br/>
+            twolinewire {{getistwolinewire}}<br/>
+            ground wire {{getisground}}<br/>
+            conduit {{getisconduit}}<br/>
+            length {{getislength}}<br/>
+            voltage drop {{getisvoltagedrop}}<br/>-->
             <q-card
                 class="my-card"
                 style="margin-bottom: 8px;"
@@ -139,7 +148,31 @@
                             <strong v-if="getisground" style="color: black;">{{item.category}}</strong>
                         </div>
                         <div class="col-6">
-                            <strong v-if="getisground">{{item.ground}}</strong><q-icon v-if="getisground" name="edit" style="margin-left: 5px;" @click="edit2linewire(item)"/>
+                            <strong v-if="getisground">{{item.ground}}</strong>
+                        </div>
+                        <div class="col-6" style="background: white;">
+                            <strong v-if="getisconduit" style="color: black;">{{item.category}}</strong>
+                        </div>
+                        <div class="col-6">
+                            <strong v-if="getisconduit">{{item.conduit}}</strong>
+                        </div>
+                        <div class="col-6" style="background: white;">
+                            <strong v-if="getislength" style="color: black;">{{item.category}}</strong>
+                        </div>
+                        <div class="col-6">
+                            <strong v-if="getislength">{{item.enterlength}}</strong>
+                        </div>
+                        <div class="col-6" style="background: white;">
+                            <strong v-if="getisvoltagedrop" style="color: black;">{{item.category}}</strong>
+                        </div>
+                        <div class="col-6">
+                            <strong v-if="getisvoltagedrop">{{item.voltagedrop}}</strong>
+                        </div>
+                        <div class="col-6" style="background: white;">
+                            <strong v-if="getisvoltagepercent" style="color: black;">{{item.category}}</strong>
+                        </div>
+                        <div class="col-6">
+                            <strong v-if="getisvoltagepercent">{{item.voltpercent}}</strong>
                         </div>
                     </div>
                 </q-card-section>
@@ -150,6 +183,7 @@
 <script>
 import { mapGetters } from 'vuex'
 export default {
+    name: 'home',
     data () {
         return {
             manualinput: false,
@@ -168,6 +202,14 @@ export default {
             changetwowire: false,
             twolinewire: null
         }
+    },
+    mounted(){
+        console.log('mounted')
+        this.$store.dispatch('topnav/setshowddcalc', true)
+    },
+    created () {
+        console.log('created')
+        this.$store.dispatch('topnav/setshowddcalc', true)
     },
     methods : {
         cancelmid(){
@@ -240,7 +282,11 @@ export default {
             getiscircuitbreaker:    'userdata/getiscircuitbreaker',
             getistwolinewire:       'userdata/getistwolinewire',
             getwiredconduit:        'userdata/getwiredconduit',
-            getisground:            'userdata/getisground'
+            getisground:            'userdata/getisground',
+            getisconduit:           'userdata/getisconduit',
+            getislength:            'userdata/getislength',
+            getisvoltagedrop:       'userdata/getisvoltagedrop',
+            getisvoltagepercent:    'userdata/getisvoltagepercent'
         }),
     }
 }

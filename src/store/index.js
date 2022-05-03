@@ -6,6 +6,7 @@ import createPersistedState from 'vuex-persistedstate'
 
 import categories from './values/categories.js'
 import userdata from './values/userdata.js'
+import topnav from './values/navrelated.js'
 
 Vue.use(Vuex)
 
@@ -23,7 +24,8 @@ export default function (/* { ssrContext } */) {
     modules: {
       // example
       categories:     categories,
-      userdata:       userdata
+      userdata:       userdata,
+      topnav:         topnav
     },
     plugins: [createPersistedState()],
     // enable strict mode (adds overhead!)

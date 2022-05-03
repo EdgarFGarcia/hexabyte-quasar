@@ -78,7 +78,9 @@ export default {
   },
   methods: {
     onItemClick(data){
-      this.$router.push({name: 'home', params: data})
+      this.$router.push({name: 'home'})
+      this.$store.dispatch('topnav/setshowddcalc', true)
+      this.$store.dispatch('topnav/setnavigation', data)
     },
     async fetchdata(){
       await this.$get(this, 'mobile/getCategories')

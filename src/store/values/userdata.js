@@ -17,11 +17,28 @@ export default{
         wireconduit: [],
         istwolinewire: false,
         prevdatalinetwowire: {},
-        isground: false
+        isground: false,
+        isconduit: false,
+        islength: false,
+        isvoltagedrop: false,
+        isvoltagepercent: false
     },
     mutations: {
         setmanualinputdata(state, payload){
             state.manualinputdata.push(payload)
+        },
+        setclearall(state, payload){
+            state.islength = payload
+            state.isconduit = payload
+            state.isground = payload
+            state.ismanualinput = payload
+            state.isvoltage = payload
+            state.isvoltamp = payload
+            state.iscurrent = payload
+            state.iscircuitbreaker = payload
+            state.istwolinewire = payload
+            state.isvoltagedrop = payload
+            state.isvoltagepercent = payload
         },
         setselectedvariable(state, payload){
             state.selectedvariable = payload
@@ -87,12 +104,43 @@ export default{
         setnewlinewire(state, payload){
             const toedit = state.manualinputdata.find(q => q.id === payload.id)
             toedit.line = payload.line
+            // isedited:       1,
+            // ground:         getwire.load_schedule_ground_wire,
+            // conduit:        getwire.conduit,
+            // resisteance:    getwire.resistance,
+            // voltagedrop:    (2 * prev.current * prev.enterlength * prev.resisteance) / 305
+            toedit.isedited = payload.isedited
+            toedit.ground = payload.ground
+            toedit.conduit = payload.conduit
+            toedit.resisteance = payload.resisteance
+            toedit.voltagedrop = payload.voltagedrop
+            // toedit.voltpercent = payload.voltpercent
+            const evoltpercent = state.manualinputdata.find(qq => qq.id === payload.id)
+            evoltpercent.voltpercent = (toedit.voltagedrop / 230) * 100
         },
         setgroundwire(state, payload){
             state.manualinputdata = [...payload]
         },
         setisground(state, payload){
             state.isground = payload
+        },
+        setisconduit(state, payload){
+            state.isconduit = payload
+        },
+        setislength(state, payload){
+            state.islength = payload
+        },
+        setisvoltagedrop(state, payload){
+            state.isvoltagedrop = payload
+        },
+        setvoltagedrop(state, payload){
+            state.manualinputdata = [...payload]
+        },
+        setvoltagepercent(state, payload){
+            state.manualinputdata = [...payload]
+        },
+        setisvoltagepercent(state, payload){
+            state.isvoltagepercent = payload
         }
     },
     getters: {
@@ -140,6 +188,18 @@ export default{
         },
         getisground(state){
             return state.isground
+        },
+        getisconduit(state){
+            return state.isconduit
+        },
+        getislength(state){
+            return state.islength
+        },
+        getisvoltagedrop(state){
+            return state.isvoltagedrop
+        },
+        getisvoltagepercent(state){
+            return state.isvoltagepercent
         }
     },
     actions: {
@@ -170,12 +230,7 @@ export default{
             }))
             commit('showvoltage', addvoltage)
             // reset all boolean first
-            commit('setisground', false)
-            commit('setcircuitbreaker', false)
-            commit('setisvoltage', false)
-            commit('setisvoltamp', false)
-            commit('setiscurrent', false)
-            commit('setistwolinewire', false)
+            commit('setclearall', false)
             // set needed boolean value
             commit('setisvoltage', true)
         },
@@ -186,12 +241,7 @@ export default{
             }))
             commit('addvoltamp', addvoltamp)
             // reset all boolean first
-            commit('setisground', false)
-            commit('setcircuitbreaker', false)
-            commit('setisvoltage', false)
-            commit('setisvoltamp', false)
-            commit('setiscurrent', false)
-            commit('setistwolinewire', false)
+            commit('setclearall', false)
             // set needed boolean value
             commit('setisvoltamp', true)
         },
@@ -202,12 +252,7 @@ export default{
             }))
             commit('addcurrent', addcurrent)
             // reset all boolean first
-            commit('setisground', false)
-            commit('setcircuitbreaker', false)
-            commit('setisvoltage', false)
-            commit('setisvoltamp', false)
-            commit('setiscurrent', false)
-            commit('setistwolinewire', false)
+            commit('setclearall', false)
             // set needed boolean value
             commit('setiscurrent', true)
         },
@@ -228,12 +273,7 @@ export default{
             })
             commit('addcircuitbreaker', circuitbreaker)
             // reset all boolean first
-            commit('setisground', false)
-            commit('setcircuitbreaker', false)
-            commit('setisvoltage', false)
-            commit('setisvoltamp', false)
-            commit('setiscurrent', false)
-            commit('setistwolinewire', false)
+            commit('setclearall', false)
             // set neede boolean value
             commit('setcircuitbreaker', true)
         },
@@ -264,17 +304,14 @@ export default{
                 findvalue = state.wireconduit.filter(q => {
                     return qcb.cctocalculate > q.minRange && qcb.cctocalculate <= q.maxRange
                 })
-                qcb.line = findvalue[0].line
-                qcb.ground = findvalue[0].load_schedule_ground_wire
+                qcb.line = qcb.isedited === 1 ? qcb.line : findvalue[0].line
+                qcb.ground = qcb.isedited === 1 ? qcb.line : findvalue[0].load_schedule_ground_wire
+                qcb.conduit = qcb.isedited === 1 ? qcb.conduit : findvalue[0].conduit
+                qcb.resisteance = qcb.isedited === 1 ? qcb.resisteance : findvalue[0].resistance
             })
             commit('settwolinewire', wire2lines)
             // reset all boolean first
-            commit('setisground', false)
-            commit('setcircuitbreaker', false)
-            commit('setisvoltage', false)
-            commit('setisvoltamp', false)
-            commit('setiscurrent', false)
-            commit('setistwolinewire', false)
+            commit('setclearall', false)
             // set neede boolean value
             commit('setistwolinewire', true)
         },
@@ -283,34 +320,60 @@ export default{
         },
         editlinewire({commit, state}, payload){
             const prev = state.prevdatalinetwowire
+            console.log(prev)
             const getwire = state.wireconduit.find(q => q.id === payload)
             const topass = {
                 id:             prev.id,
-                line:           getwire.line
+                line:           getwire.line,
+                isedited:       1,
+                ground:         getwire.load_schedule_ground_wire,
+                conduit:        getwire.conduit,
+                resisteance:    getwire.resistance,
+                voltagedrop:    (2 * prev.current * prev.enterlength * prev.resisteance) / 305
             }
             commit('setnewlinewire', topass)
         },
-        showgoundwire({commit, state}){
-            const ground = state.manualinputdata.map((item) => ({
-                ...item,
-                cctocalculate: item.frominputpreset === 1 ? (item.current * item.multiplier).toFixed(2) : (item.current * 1).toFixed(2)
-            }))
-            let findvalue = 0
-            ground.forEach(qcb => {
-                findvalue = state.wireconduit.filter(q => {
-                    return qcb.cctocalculate > q.minRange && qcb.cctocalculate <= q.maxRange
-                })
-                qcb.ground = findvalue[0].load_schedule_ground_wire
-            })
-            commit('setgroundwire', ground)
-            commit('setisground', false)
-            commit('setcircuitbreaker', false)
-            commit('setisvoltage', false)
-            commit('setisvoltamp', false)
-            commit('setiscurrent', false)
-            commit('setistwolinewire', false)
+        showgoundwire({commit}){
+            // const ground = state.manualinputdata.map((item) => ({
+            //     ...item,
+            //     cctocalculate: item.frominputpreset === 1 ? (item.current * item.multiplier).toFixed(2) : (item.current * 1).toFixed(2)
+            // }))
+            // let findvalue = 0
+            // ground.forEach(qcb => {
+            //     findvalue = state.wireconduit.filter(q => {
+            //         return qcb.cctocalculate > q.minRange && qcb.cctocalculate <= q.maxRange
+            //     })
+            //     qcb.ground = findvalue[0].load_schedule_ground_wire
+            // })
+            commit('setclearall', false)
             // set needed boolean value
             commit('setisground', true)
+        },
+        showconduit({commit}){
+            commit('setclearall', false)
+            commit('setisconduit', true)
+        },
+        showlength({commit}){
+            commit('setclearall', false)
+            commit('setislength', true)
+        },
+        showvoltagedrop({commit, state}){
+            const voltagedrop = state.manualinputdata.map((item) => ({
+                ...item,
+                voltagedrop: (2 * item.current * item.enterlength * item.resisteance) / 305
+            }))
+            commit('setvoltagedrop', voltagedrop)
+            commit('setclearall', false)
+            commit('setisvoltagedrop', true)
+        },
+        showvoltagepercent({commit, state}){
+            const voltagepercent = state.manualinputdata.map((item) => ({
+                ...item,
+                voltpercent: (item.voltagedrop / 230) * 100
+            }))
+            commit('setvoltagepercent', voltagepercent)
+            commit('setclearall', false)
+            commit('setisvoltagepercent', true)
         }
     }
 }
