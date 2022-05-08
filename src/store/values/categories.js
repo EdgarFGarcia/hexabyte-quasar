@@ -6,6 +6,7 @@ export default{
       categories: [],
       parent_categories: [],
       child_categories: [],
+      kaic: []
     },
     mutations: {
       setCategories(state, payload){
@@ -16,6 +17,9 @@ export default{
       },
       setchild_categories(state, payload){
         state.child_categories = [...payload]
+      },
+      setkaic(state, payload){
+        state.kaic = [...payload]
       }
     },
     getters: {
@@ -28,6 +32,9 @@ export default{
       getchild_categories(state){
         return state.child_categories
       },
+      getkaic(state){
+        return state.kaic
+      }
     },
     actions: {
       setCategories({commit}, payload){
@@ -38,6 +45,9 @@ export default{
       },
       setchild_categories({commit}, payload){
         commit('setchild_categories', payload)
+      },
+      setkaic({commit}, payload){
+        commit('setkaic', payload)
       }
     }
 }

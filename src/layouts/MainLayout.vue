@@ -12,7 +12,7 @@
         />
 
         <q-toolbar-title>
-          {{getnavigation.parent}} - {{getnavigation.title}}
+          <small>{{getnavigation.parent}} - {{getnavigation.title}} {{getnavigation.child}}</small>
         </q-toolbar-title>
       </q-toolbar>
     </q-header>
@@ -66,13 +66,12 @@
           </q-list>
         </q-btn-dropdown>
       </div>
-      <router-view/>
     </q-page-container>
-
+    <router-view/>
     <!--
       FAB
      -->
-    <div class="q-pa-md" style="position: fixed; bottom: 0; right: 0;">
+    <div class="q-pa-md" v-if="getshowddcalc" style="position: fixed; bottom: 0; right: 0;">
       <div class="row justify-between">
         <q-fab
           v-model="fabRight"
@@ -108,7 +107,7 @@ const linksData = [
   {
     title: 'Home',
     caption: 'home',
-    router: 'selection',
+    router: 'home',
     icon: 'home'
   },
   {

@@ -113,6 +113,13 @@ export default {
           this.$store.dispatch('userdata/setwiredconduit', data.data)
         }
       })
+      await this.$get(this, 'mobile/getKaic')
+      .then(({data}) => {
+        // console.log('kaic', data)
+        if(data.response){
+          this.$store.dispatch('categories/setkaic', data.data)
+        }
+      })
     }
   }
 }

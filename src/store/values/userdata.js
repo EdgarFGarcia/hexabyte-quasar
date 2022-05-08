@@ -200,7 +200,31 @@ export default{
         },
         getisvoltagepercent(state){
             return state.isvoltagepercent
-        }
+        },
+        getloadsummary(state){
+            const data = state.manualinputdata
+            const toreturn = {
+                total:          state.manualinputdata,
+                items: [
+                  {
+                    name:       'TOTAL VOLT-AMPERE (VA)',
+                    result:     state.manualinputdata.reduce((n, {volt_amp}) => n + volt_amp, 0)
+                  },
+                  {
+                    name:       'TOTAL CURRENT (AMP)',
+                    result:     state.manualinputdata.reduce((n, {current}) => n + current, 0)
+                  }
+                ]
+                // loadsummary:    state.manualinputdata.reduce((n, {volt_amp}) => n + volt_amp, 0),
+                // current:        state.manualinputdata.reduce((n, {current}) => n + current, 0)
+
+            }
+            return toreturn
+            // return state.manualinputdata.reduce((n, {volt_amp}) => n + volt_amp, 0)
+        },
+        // gettotalcurrent(state){
+        //     return state.manualinputdata.reduce((n, {current}) => n + current, 0)
+        // }
     },
     actions: {
         setmanualinputdata({commit, state}, payload){

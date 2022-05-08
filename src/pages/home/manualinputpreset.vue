@@ -89,15 +89,6 @@
             </div>
         </div>
         <div class="q-pa-md" v-if="!getismanualinput && !getispresetdata && !changecircuitbreaker && !changetwowire">
-            <!--voltage {{getisvoltage}}<br/>
-            volt amp {{getisvoltamp}}<br/>
-            current {{getiscurrent}}<br/>
-            circuit breaker {{getiscircuitbreaker}}<br/>
-            twolinewire {{getistwolinewire}}<br/>
-            ground wire {{getisground}}<br/>
-            conduit {{getisconduit}}<br/>
-            length {{getislength}}<br/>
-            voltage drop {{getisvoltagedrop}}<br/>-->
             <q-card
                 class="my-card"
                 style="margin-bottom: 8px;"
@@ -206,10 +197,14 @@ export default {
     mounted(){
         console.log('mounted')
         this.$store.dispatch('topnav/setshowddcalc', true)
+        this.$store.dispatch('topnav/setisloadsummary', false)
+        this.$store.dispatch('topnav/setnavigationchild', '')
     },
     created () {
         console.log('created')
         this.$store.dispatch('topnav/setshowddcalc', true)
+        this.$store.dispatch('topnav/setisloadsummary', false)
+        this.$store.dispatch('topnav/setnavigationchild', '')
     },
     methods : {
         cancelmid(){
@@ -286,7 +281,7 @@ export default {
             getisconduit:           'userdata/getisconduit',
             getislength:            'userdata/getislength',
             getisvoltagedrop:       'userdata/getisvoltagedrop',
-            getisvoltagepercent:    'userdata/getisvoltagepercent'
+            getisvoltagepercent:    'userdata/getisvoltagepercent',
         }),
     }
 }

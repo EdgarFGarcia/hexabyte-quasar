@@ -18,6 +18,16 @@ const routes = [
         path: '',
         name: 'home',
         component: () => import('pages/home/manualinputpreset.vue')
+      },
+      {
+        path: 'loadsummary',
+        name: 'loadsummary',
+        component: () => import('pages/home/loadsummary.vue')
+      },
+      {
+        path: 'shortcircuit',
+        name: 'shortcircuit',
+        component: () => import('pages/home/shortcircuit.vue')
       }
     ]
   },
