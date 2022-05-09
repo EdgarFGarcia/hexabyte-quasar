@@ -33,48 +33,6 @@ export default {
   },
   data () {
     return {
-      // cooking: {
-      //   items: [
-      //     {
-      //       minRange: 0,
-      //       maxRange: 1750,
-      //       items: [
-      //         {
-      //           count: any,
-      //           multipler: 1
-      //         }
-      //       ]
-      //     },
-      //     {
-      //       minRange: 1750,
-      //       maxRange: 3500,
-      //       items: [
-      //         {
-      //           count: 1,
-      //           multipler: 0.8
-      //         },
-      //         {
-      //           count: 2,
-      //           multipler: 0.75
-      //         },
-      //         {
-      //           count: 3,
-      //           multiplier: 0.7
-      //         }
-      //       ]
-      //     },
-      //     {
-      //       minRange: 3500,
-      //       maxRange: 8750,
-      //       items: [
-      //         {
-      //           count: 1,
-      //           multiplier: 0.8
-      //         }
-      //       ]
-      //     }
-      //   ]
-      // }
     }
   },
   created () {
@@ -83,10 +41,10 @@ export default {
     this.$store.dispatch('topnav/setisloadsummary', true)
   },
   mounted(){
-    console.log('called mounted loadsummary')
     this.$store.dispatch('topnav/setshowddcalc', false)
     this.$store.dispatch('topnav/setnavigationchild', 'LOAD SUMMARY')
     this.$store.dispatch('topnav/setisloadsummary', true)
+    // console.log(this.$store.getters['categories/getCategories'])
   },
   computed : {
     ...mapGetters({

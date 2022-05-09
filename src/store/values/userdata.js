@@ -201,8 +201,28 @@ export default{
         getisvoltagepercent(state){
             return state.isvoltagepercent
         },
-        getloadsummary(state){
+        getloadsummary(state, getters, rootState, rootGetters){
             const data = state.manualinputdata
+            // const categories = rootGetters['categories/getCategories']
+            let meow = []
+            // group by data by category
+            const groupby = data.reduce(function( r, a ) {
+                r[a.parent_id] = r[a.parent_id] || []
+                r[a.parent_id].push(a)
+                return r
+            }, Object.create(null))
+            // check if it has reduce (sum) 
+            // note: data is now object of array, instead of array of object, 
+            // don't flat it since it's already grouped by
+            let va = 0
+            // Object.entries(groupby).forEach(([k, v]) => {
+            //     console.log(k, v)
+            // })
+            Object.keys(groupby).forEach(function(k) {
+                console.log(groupby[k].length)
+                console.log(groupby[k])
+            })
+            // console.log(va)
             const toreturn = {
                 total:          state.manualinputdata,
                 items: [

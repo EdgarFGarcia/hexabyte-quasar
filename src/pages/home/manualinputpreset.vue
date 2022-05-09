@@ -223,6 +223,10 @@ export default {
         savepd(){
             this.mid.frominputpreset = 1
             const va = this.getchild_categories.filter(q => q.label.includes(this.mid.category))
+            const parent_id = va[0].parent_id
+            const parent = this.parent.filter( q => q.id === parent_id)
+            this.mid.parent_id = parent_id
+            this.mid.parent_data = parent
             this.mid.va = va[0].va
             this.mid.multiplier = va[0].multiplier
             this.$store.dispatch('userdata/setmanualinputdata', this.mid)
@@ -264,6 +268,7 @@ export default {
     },
     computed : {
         ...mapGetters({
+            parent:                 'categories/getCategories',
             parent_categories:      'categories/getparent_categories',
             getchild_categories:    'categories/getchild_categories',
             getselectedvariable:    'userdata/getselectedvariable',
