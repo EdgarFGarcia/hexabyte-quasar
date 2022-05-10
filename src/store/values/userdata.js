@@ -21,7 +21,14 @@ export default{
         isconduit: false,
         islength: false,
         isvoltagedrop: false,
-        isvoltagepercent: false
+        isvoltagepercent: false,
+        // GROUP BY CATEGORIES
+        cooking: [],
+        cooling: [],
+        dryer: [],
+        heating: [],
+        loco: [],
+        others: []
     },
     mutations: {
         setmanualinputdata(state, payload){
@@ -141,6 +148,24 @@ export default{
         },
         setisvoltagepercent(state, payload){
             state.isvoltagepercent = payload
+        },
+        setcooking(state, payload){
+            state.cooking.push(payload)
+        },
+        setcooling(state, payload){
+            state.cooling.push(payload)
+        },
+        setdryer(state, payload){
+            state.dryer.push(payload)
+        },
+        setheating(state, payload){
+            state.heating.push(payload)
+        },
+        setloco(state, payload){
+            state.loco.push(payload)
+        },
+        setothers(state, payload){
+            state.others.push(payload)
         }
     },
     getters: {
@@ -203,26 +228,164 @@ export default{
         },
         getloadsummary(state, getters, rootState, rootGetters){
             const data = state.manualinputdata
-            // const categories = rootGetters['categories/getCategories']
-            let meow = []
-            // group by data by category
-            const groupby = data.reduce(function( r, a ) {
-                r[a.parent_id] = r[a.parent_id] || []
-                r[a.parent_id].push(a)
-                return r
-            }, Object.create(null))
-            // check if it has reduce (sum) 
-            // note: data is now object of array, instead of array of object, 
-            // don't flat it since it's already grouped by
-            let va = 0
-            // Object.entries(groupby).forEach(([k, v]) => {
-            //     console.log(k, v)
-            // })
-            Object.keys(groupby).forEach(function(k) {
-                console.log(groupby[k].length)
-                console.log(groupby[k])
+
+            // get lo.co data
+            const loco = state.loco
+            const sumlocova = loco.reduce((n, {volt_amp}) => n + volt_amp, 0)
+            let locoresult = 0
+            if(sumlocova <= 3000){
+                locoresult = sumlocova
+            }
+            if(sumlocova > 3000 && sumlocova <= 120000){
+                locoresult = 3000 + ((sumlocova - 3000) * 0.35)
+            }
+            if(sumlocova > 120000){
+                locoresult = 3000 +((117000) *0.35) + ((sumlocova - 120000) * 0.25)
+            }
+            // end loco
+
+            // cooling
+            const cooling = state.cooling
+            const sum_main_breaker = cooling.reduce((n, {volt_amp}) => n + volt_amp, 0)
+            const sum_main_feeder = cooling.reduce((n, {volt_amp}) => n + volt_amp, 0)
+            const high_value = Math.max(...cooling.map(r => r.volt_amp))
+
+            let main_breaker_result = sum_main_breaker + (high_value * 1.50)
+            let main_feeder_result = sum_main_breaker + (high_value * 0.25)
+
+            // console.log(main_breaker_result, main_feeder_result)
+            // end cooling
+
+            // heating
+            const heating = state.heating
+            const sum_heating = heating.reduce((n, {volt_amp}) => n + volt_amp, 0)
+            // end heating
+
+            // others
+            const others = state.others
+            const sum_others = others.reduce((n, {volt_amp}) => n + volt_amp, 0)
+            // end others
+
+            // dryer
+            const dryer = state.dryer
+            let resultdryer = 0
+            if(dryer.length != 0){
+                const getcat = rootGetters['categories/getCategories']
+                const rcat = getcat.filter(q => {
+                    return q.category == 'DRYER'
+                })
+                const multipliers = rcat[0].computation.spc_restriction[0].multiplier
+                const dryercount = dryer.length
+                const multiplier = multipliers.filter( q => {
+                    return q.count === dryercount
+                })
+                const sum_dryer = dryer.reduce((n, {volt_amp}) => n + volt_amp, 0)
+                resultdryer = sum_dryer * multiplier[0].multiplier
+            }
+            // console.log(resultdryer)
+            // end dryer
+            // cooking
+            const cooking = state.cooking
+            const range1 = cooking.filter( q => {
+                return q.volt_amp <= 1750
             })
-            // console.log(va)
+            const range2 = cooking.filter(q => {
+                return q.volt_amp > 1750 && q.volt_amp < 3500
+            })
+            const range3 = cooking.filter(q => {
+                return q.volt_amp >= 3500 && q.volt_amp < 8750
+            })
+            const range4 = cooking.filter(q => {
+                return q.volt_amp > 8750 && q.volt_amp <= 12000 
+            })
+            const range5 = cooking.filter(q => {
+                return q.volt_amp > 12000
+            })
+            const range_one_count = range1.length
+            const range_two_count = range2.length
+            const range_three_count = range3.length
+            const range_four_count = range4.length
+            const range_five_count = range5.length
+
+            const formula = rootGetters['categories/getCategories']
+            const cooking_cat = formula.filter(q => {
+                return q.category == 'COOKING'
+            })
+
+            const formula_to_use = cooking_cat[0].computation.spc_restriction
+            const sum_va_range1 = range1.reduce((n, {volt_amp}) => n + volt_amp, 0)
+            const max_range_one = Math.max(...range1.map(r => r.volt_amp))
+            const max_range_two = Math.max(...range2.map(r => r.volt_amp))
+            const max_range_three = Math.max(...range3.map(r => r.volt_amp))
+            const max_range_four = Math.max(...range4.map(r => r.volt_amp))
+
+            // multipler one
+            const range_one_formula = formula_to_use.filter(q => {
+                return q.from_range <= max_range_one && q.to_range >= max_range_one
+            })
+            let multiplier_one = null
+            if(range_one_formula.length > 0){
+                multiplier_one = range_one_formula[0].multiplier.filter(q => {
+                    return q.count === 0
+                })
+            }
+            // end multipler one
+
+            // multiplier two
+            const range_two_formula = formula_to_use.filter(q => {
+                return q.from_range <= max_range_two && q.to_range >= max_range_two
+            })
+            let multiplier_two = null
+            if(range_two_formula.length > 0){
+                multiplier_two = range_two_formula[0].multiplier.filter(q => {
+                    return q.count === range_two_count
+                })
+            }
+            // end multiplier two
+
+            // multiplier three
+            const range_three_formula = formula_to_use.filter(q => {
+                return q.from_range <= max_range_three && q.to_range >= max_range_three
+            })
+            let multiplier_three = null
+            if(range_three_formula.length > 0){
+                multiplier_three = range_three_formula[0].multiplier.filter(q => {
+                    return q.count === range_three_count
+                })
+            }
+            // end multiplier three
+
+            // multiplier four
+            const range_four_formula = formula_to_use.filter(q => {
+                return q.from_range <= max_range_four && q.to_range >= max_range_four
+            })
+            let multiplier_four = null
+            if(range_four_formula.length > 0){
+                multiplier_four = range_four_formula[0].multiplier.filter(q => {
+                    return q.count === range_four_count
+                })
+            }
+            // end multiplier four
+
+            const sum_range_one = range1.reduce((n, {volt_amp}) => n + volt_amp, 0)
+            const sum_range_two = range2.reduce((n, {volt_amp}) => n + volt_amp, 0)
+            const sum_range_three = range3.reduce((n, {volt_amp}) => n + volt_amp, 0)
+
+            const range_one_result = sum_range_one * multiplier_one[0].multiplier
+            const range_two_result = sum_range_two * multiplier_two[0].multiplier
+            const range_three_result = sum_range_three * multiplier_three[0].multiplier
+            const range_four_result = multiplier_four[0].multiplier
+
+            const sum_cooking = parseInt(range_one_result) + parseInt(range_two_result) + parseInt(range_three_result) + parseInt(range_four_result)
+            // let main_feeder_result = sum_main_breaker + (high_value * 0.25)
+            const main_breaker = isFinite(main_breaker_result) ? parseInt(main_breaker_result) : 0
+            const main_feeder = isFinite(main_feeder_result) ? parseInt(main_feeder_result) : 0
+            const total = (parseInt(sum_cooking) + parseInt(resultdryer) + parseInt(sum_others) + parseInt(sum_heating) + parseInt(locoresult) + parseInt(main_breaker)) / 230
+            const ifl = (parseInt(sum_cooking) + parseInt(resultdryer) + parseInt(sum_others) + parseInt(sum_heating) + parseInt(locoresult) + parseInt(main_feeder)) / 230
+
+            // end cooking
+
+            // const categories = rootGetters['categories/getCategories']
             const toreturn = {
                 total:          state.manualinputdata,
                 items: [
@@ -233,6 +396,14 @@ export default{
                   {
                     name:       'TOTAL CURRENT (AMP)',
                     result:     state.manualinputdata.reduce((n, {current}) => n + current, 0)
+                  },
+                  {
+                    name:       'OCPD Current (AMP)',
+                    result:     total
+                  },
+                  {
+                    name:       'IFL Current (AMP)',
+                    result:     ifl
                   }
                 ]
                 // loadsummary:    state.manualinputdata.reduce((n, {volt_amp}) => n + volt_amp, 0),
@@ -250,6 +421,24 @@ export default{
         setmanualinputdata({commit, state}, payload){
             const forId = state.manualinputdata.length
             payload.id = forId + 1
+            if(payload.parent_data.category === 'COOKING'){
+                commit('setcooking', payload)
+            }
+            if(payload.parent_data.category === 'COOLING'){
+                commit('setcooling', payload)
+            }
+            if(payload.parent_data.category === 'DRYER'){
+                commit('setdryer', payload)
+            }
+            if(payload.parent_data.category === 'HEATING'){
+                commit('setheating', payload)
+            }
+            if(payload.parent_data.category === 'LO.CO'){
+                commit('setloco', payload)
+            }
+            if(payload.parent_data.category === 'OTHERS'){
+                commit('setothers', payload)
+            }
             commit('setmanualinputdata', payload)
         },
         setselecteddd({commit}, payload){
@@ -283,6 +472,50 @@ export default{
                 ...item,
                 volt_amp:  item.frominputpreset === 1 ? (item.pcs * item.va) : item.voltampred * item.pcs
             }))
+            addvoltamp.forEach( q => {
+                if(q.parent_data.category === 'LO.CO'){
+                    const toeditloco = state.loco.filter( l => {
+                        return l.id === q.id
+                    })
+                    toeditloco[0].volt_amp = q.volt_amp
+                    return
+                }
+                if(q.parent_data.category === 'COOKING'){
+                    const toeditcooking = state.cooking.filter( cook => {
+                        return cook.id === q.id
+                    })
+                    toeditcooking[0].volt_amp = q.volt_amp
+                    return
+                }
+                if(q.parent_data.category === 'COOLING'){
+                    const toeditcooling = state.cooling.filter( cool => {
+                        return cool.id === q.id
+                    })
+                    toeditcooling[0].volt_amp = q.volt_amp
+                    return
+                }
+                if(q.parent_data.category === 'DRYER'){
+                    const toeditdryer = state.dryer.filter( dry => {
+                        return dry.id === q.id
+                    })
+                    toeditdryer[0].volt_amp = q.volt_amp
+                    return
+                }
+                if(q.parent_data.category === 'HEATING'){
+                    const toeditheating = state.heating.filter(heat => {
+                        return heat.id === q.id
+                    })
+                    toeditheating[0].volt_amp = q.volt_amp
+                    return
+                }
+                if(q.parent_data.category === 'OTHERS'){
+                    const toeditothers = state.others.filter(other => {
+                        return other.id === q.id
+                    })
+                    toeditothers[0].volt_amp = q.volt_amp
+                    return
+                }
+            })
             commit('addvoltamp', addvoltamp)
             // reset all boolean first
             commit('setclearall', false)

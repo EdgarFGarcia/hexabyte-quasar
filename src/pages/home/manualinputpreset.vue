@@ -212,8 +212,10 @@ export default {
             this.$store.dispatch('userdata/setismanualinput', false)
         },
         savemanualinputdata(){
+            const parent_category = this.parent.filter(q => q.category === this.mid.category)
+            this.mid.parent_data = parent_category[0]
             this.$store.dispatch('userdata/setmanualinputdata', this.mid)
-            this.mid = []
+            this.mid = {}
             this.$store.dispatch('userdata/setismanualinput', false)
         },
         cancelpd(){
@@ -226,11 +228,11 @@ export default {
             const parent_id = va[0].parent_id
             const parent = this.parent.filter( q => q.id === parent_id)
             this.mid.parent_id = parent_id
-            this.mid.parent_data = parent
+            this.mid.parent_data = parent[0]
             this.mid.va = va[0].va
             this.mid.multiplier = va[0].multiplier
             this.$store.dispatch('userdata/setmanualinputdata', this.mid)
-            this.mid = []
+            this.mid = {}
             this.$store.dispatch('userdata/setispresetdata', false)
         },
         filterchild(val, update){
