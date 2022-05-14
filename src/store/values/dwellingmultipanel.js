@@ -29,9 +29,7 @@ export default{
         heating: [],
         loco: [],
         others: [],
-        loadsummary: {},
-        nav_voltage_drop: {},
-        supply_to_branch: {}
+        loadsummary: {}
     },
     mutations: {
         setmanualinputdata(state, payload){
@@ -169,24 +167,6 @@ export default{
         },
         setothers(state, payload){
             state.others.push(payload)
-        },
-        deleteitem(state, payload){
-            state.manualinputdata.splice(payload.index, 1)
-        },
-        editlscbreaker(state, payload){
-            state.loadsummary.items[4].result = payload[0].load_summary_ground_wire
-            state.loadsummary.items[2].result = 'AT ' + payload[0].at + ', AF ' + payload[0].af + ', Pole ' + payload[0].pole
-        },
-        editlsmainfeeder(state, payload){
-            state.loadsummary.items[5].result = payload[0].line
-            state.loadsummary.items[7].result = payload[0].conduit
-            state.loadsummary.resistance = payload[0].resistance
-        },
-        setnav_voltage_drop(state, payload){
-            state.nav_voltage_drop = payload
-        },
-        setsupply_to_branch(state, payload){
-            state.supply_to_branch = payload
         }
     },
     getters: {
@@ -427,9 +407,7 @@ export default{
                   },
                   {
                     name:       'Main Circuit Breaker',
-                    result:     'AT ' + findvaluecircuitbreaker[0].at + ', AF ' + findvaluecircuitbreaker[0].af + ', Pole ' + findvaluecircuitbreaker[0].pole,
-                    hasdd:      true,
-                    dditem:     'breaker'
+                    result:     'AF ' + findvaluecircuitbreaker[0].af + ', AT ' + findvaluecircuitbreaker[0].at + ', Pole ' + findvaluecircuitbreaker[0].pole
                   },
                   {
                     name:       'OCPD Current (AMP)',
@@ -441,9 +419,7 @@ export default{
                   },
                   {
                     name:       'Main Feeder',
-                    result:     findvaluemainfeeder[0].line,
-                    hasdd:      true,
-                    dditem:     'feeder'
+                    result:     findvaluemainfeeder[0].line
                   },
                   {
                     name:       'IFL Current (AMP)',
@@ -459,12 +435,9 @@ export default{
             state.loadsummary = toreturn
             return toreturn
         },
-        getnav_voltage_drop(state){
-            return state.nav_voltage_drop
-        },
-        getsupply_to_branch(state){
-            return state.supply_to_branch
-        }
+        // gettotalcurrent(state){
+        //     return state.manualinputdata.reduce((n, {current}) => n + current, 0)
+        // }
     },
     actions: {
         setmanualinputdata({commit, state}, payload){
@@ -700,39 +673,6 @@ export default{
             commit('setvoltagepercent', voltagepercent)
             commit('setclearall', false)
             commit('setisvoltagepercent', true)
-        },
-        deleteitem({commit}, payload){
-            commit('deleteitem', payload)
-        },
-        // edit load summay circuit breaker
-        editlscbreaker({commit, state}, payload){
-            const data = state.cbreaker.filter(q => q.id === payload)
-            commit('editlscbreaker', data)
-        },
-        // edit load summary main feeder
-        editlsmainfeeder({commit, state}, payload){
-            const data = state.wireconduit.filter(q => q.id === payload)
-            commit('editlsmainfeeder', data)
-        },
-        voltagedropmainfeeder({commit, state}, payload){
-            const data = state.loadsummary
-            const votagedrop = (2 * data.items[1].result * payload * data.resistance) / 305
-            const voltage_drop_percent = (votagedrop / 230) * 100
-            let tp = {
-                voltagedrop: votagedrop,
-                voltage_drop_percent: voltage_drop_percent
-            }
-            commit('setnav_voltage_drop', tp)
-        },
-        supplytobranch({commit, state}, payload){
-            const data = state.wireconduit.filter(q => q.id === payload.wire)
-            const voltagedrop = (2 * payload.current * payload.length * data[0].resistance) / 305
-            const voltage_drop_percent = (voltagedrop / 230) * 100
-            let tp = {
-                voltagedrop: voltagedrop,
-                voltage_drop_percent: voltage_drop_percent
-            }
-            commit('setsupply_to_branch', tp)
         }
     }
 }

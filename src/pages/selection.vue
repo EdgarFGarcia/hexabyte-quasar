@@ -78,7 +78,13 @@ export default {
   },
   methods: {
     onItemClick(data){
-      this.$router.push({name: 'home'})
+      console.log(data)
+      if(data.id == 1){
+        this.$router.push({name: 'home'})
+      }
+      if(data.id == 2){
+        this.$router.push({name: 'dwellingmultipanel'})
+      }
       this.$store.dispatch('topnav/setshowddcalc', true)
       this.$store.dispatch('topnav/setnavigation', data)
     },
@@ -430,11 +436,9 @@ export default {
                 }
                 break
               default:
-                console.log('meow')
                 break
             }
           })
-          console.log(data.data)
           this.$store.dispatch('categories/setCategories', data.data)
         }
       })

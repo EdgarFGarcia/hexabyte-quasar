@@ -8,6 +8,9 @@ import categories from './values/categories.js'
 import userdata from './values/userdata.js'
 import topnav from './values/navrelated.js'
 
+// dwelling multipanel store
+import uddwellmulti from './values/dwellingmultipanel.js'
+
 Vue.use(Vuex)
 
 /*
@@ -25,6 +28,7 @@ export default function (/* { ssrContext } */) {
       // example
       categories:     categories,
       userdata:       userdata,
+      uddwellmulti:   uddwellmulti,
       topnav:         topnav
     },
     plugins: [createPersistedState()],

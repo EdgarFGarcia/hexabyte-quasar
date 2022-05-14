@@ -7,6 +7,7 @@ export default{
         showddcalc: false,
         isloadsummary: false,
         isshortcircuit: false,
+        isvoltagedrop: false
     },
     mutations: {
         setnavigation(state, payload){
@@ -23,6 +24,9 @@ export default{
         },
         setisshortcircuit(state, payload){
             state.isshortcircuit = payload
+        },
+        setisvoltagedrop(state, payload){
+            state.isvoltagedrop = payload
         }
     },
     getters: {
@@ -37,6 +41,9 @@ export default{
         },
         getisshortcircuit(state){
             return state.isshortcircuit
+        },
+        getisvoltagedrop(state){
+            return state.isvoltagedrop
         }
     },
     actions: {
@@ -54,6 +61,9 @@ export default{
         },
         setisshortcircuit({commit}, payload){
             commit('setisshortcircuit', payload)
+        },
+        setisvoltagedrop({commit}, payload){
+            commit('setisvoltagedrop', payload)
         }
     }
 }

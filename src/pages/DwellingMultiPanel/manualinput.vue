@@ -109,61 +109,61 @@
                             <label v-if="getisvoltage" style="color: black;">{{item.category}}</label>
                         </div>
                         <div class="col-6">
-                            <strong v-if="getisvoltage">{{item.voltage}}<q-icon name="delete" style="margin-left: 5px;" @click="deleteitem(item)"></q-icon></strong>
+                            <strong v-if="getisvoltage">{{item.voltage}}</strong>
                         </div>
                         <div class="col-6" style="background: white;">
                             <label v-if="getisvoltamp" style="color: black;">{{item.category}}</label>
                         </div>
                         <div class="col-6">
-                            <strong v-if="getisvoltamp">{{item.volt_amp}}<q-icon name="delete" style="margin-left: 5px;" @click="deleteitem(item)"></q-icon></strong>
+                            <strong v-if="getisvoltamp">{{item.volt_amp}}</strong>
                         </div>
                         <div class="col-6" style="background: white;">
                             <label v-if="getiscurrent" style="color: black;">{{item.category}}</label>
                         </div>
                         <div class="col-6">
-                            <strong v-if="getiscurrent">{{item.current}}<q-icon name="delete" style="margin-left: 5px;" @click="deleteitem(item)"></q-icon></strong>
+                            <strong v-if="getiscurrent">{{item.current}}</strong>
                         </div>
                         <div class="col-6" style="background: white;">
                             <label v-if="getiscircuitbreaker" style="color: black;">{{item.category}}</label>
                         </div>
                         <div class="col-6">
-                            <strong v-if="getiscircuitbreaker">{{item.at}} AT, {{item.af}} AF, {{item.pole}} POLE <q-icon name="delete" style="margin-left: 5px;" @click="deleteitem(item)"></q-icon></strong><q-icon v-if="getiscircuitbreaker" name="edit" style="margin-left: 5px;" @click="editcircuitbreaker(item)"/>
+                            <strong v-if="getiscircuitbreaker">{{item.at}} AT, {{item.af}} AF, {{item.pole}} POLE</strong><q-icon v-if="getiscircuitbreaker" name="edit" style="margin-left: 5px;" @click="editcircuitbreaker(item)"/>
                         </div>
                         <div class="col-6" style="background: white;">
                             <strong v-if="getistwolinewire" style="color: black;">{{item.category}}</strong>
                         </div>
                         <div class="col-6">
-                            <strong v-if="getistwolinewire">{{item.line}} <q-icon name="delete" style="margin-left: 5px;" @click="deleteitem(item)"></q-icon></strong><q-icon v-if="getistwolinewire" name="edit" style="margin-left: 5px;" @click="edit2linewire(item)"/>
+                            <strong v-if="getistwolinewire">{{item.line}}</strong><q-icon v-if="getistwolinewire" name="edit" style="margin-left: 5px;" @click="edit2linewire(item)"/>
                         </div>
                         <div class="col-6" style="background: white;">
                             <strong v-if="getisground" style="color: black;">{{item.category}}</strong>
                         </div>
                         <div class="col-6">
-                            <strong v-if="getisground">{{item.ground}}<q-icon name="delete" style="margin-left: 5px;" @click="deleteitem(item)"></q-icon></strong>
+                            <strong v-if="getisground">{{item.ground}}</strong>
                         </div>
                         <div class="col-6" style="background: white;">
                             <strong v-if="getisconduit" style="color: black;">{{item.category}}</strong>
                         </div>
                         <div class="col-6">
-                            <strong v-if="getisconduit">{{item.conduit}}<q-icon name="delete" style="margin-left: 5px;" @click="deleteitem(item)"></q-icon></strong>
+                            <strong v-if="getisconduit">{{item.conduit}}</strong>
                         </div>
                         <div class="col-6" style="background: white;">
                             <strong v-if="getislength" style="color: black;">{{item.category}}</strong>
                         </div>
                         <div class="col-6">
-                            <strong v-if="getislength">{{item.enterlength}}<q-icon name="delete" style="margin-left: 5px;" @click="deleteitem(item)"></q-icon></strong>
+                            <strong v-if="getislength">{{item.enterlength}}</strong>
                         </div>
                         <div class="col-6" style="background: white;">
                             <strong v-if="getisvoltagedrop" style="color: black;">{{item.category}}</strong>
                         </div>
                         <div class="col-6">
-                            <strong v-if="getisvoltagedrop">{{item.voltagedrop}}<q-icon name="delete" style="margin-left: 5px;" @click="deleteitem(item)"></q-icon></strong>
+                            <strong v-if="getisvoltagedrop">{{item.voltagedrop}}</strong>
                         </div>
                         <div class="col-6" style="background: white;">
                             <strong v-if="getisvoltagepercent" style="color: black;">{{item.category}}</strong>
                         </div>
                         <div class="col-6">
-                            <strong v-if="getisvoltagepercent">{{item.voltpercent}}<q-icon name="delete" style="margin-left: 5px;" @click="deleteitem(item)"></q-icon></strong>
+                            <strong v-if="getisvoltagepercent">{{item.voltpercent}}</strong>
                         </div>
                     </div>
                 </q-card-section>
@@ -195,19 +195,18 @@ export default {
         }
     },
     mounted(){
+        console.log('mounted')
         this.$store.dispatch('topnav/setshowddcalc', true)
         this.$store.dispatch('topnav/setisloadsummary', false)
         this.$store.dispatch('topnav/setnavigationchild', '')
     },
     created () {
+        console.log('created')
         this.$store.dispatch('topnav/setshowddcalc', true)
         this.$store.dispatch('topnav/setisloadsummary', false)
         this.$store.dispatch('topnav/setnavigationchild', '')
     },
     methods : {
-        deleteitem(data){
-            this.$store.dispatch('userdata/deleteitem', data)
-        },
         cancelmid(){
             this.mid = {}
             this.$store.dispatch('userdata/setismanualinput', false)

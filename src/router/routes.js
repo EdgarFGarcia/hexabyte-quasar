@@ -25,9 +25,26 @@ const routes = [
         component: () => import('pages/home/loadsummary.vue')
       },
       {
+        path: 'voltagedrop',
+        name: 'voltagedrop',
+        component: () => import('pages/home/voltagedrop.vue')
+      },
+      {
         path: 'shortcircuit',
         name: 'shortcircuit',
         component: () => import('pages/home/shortcircuit.vue')
+      }
+    ],
+  },
+  {
+    path: '/dwellingmultipanel',
+    name: 'dwellingmultipanel',
+    component: () => import ('layouts/DwellingMultiPanel.vue'),
+    children: [
+      {
+        path: '',
+        name: 'home',
+        component: () => import('pages/DwellingMultiPanel/manualinput.vue')
       }
     ]
   },
