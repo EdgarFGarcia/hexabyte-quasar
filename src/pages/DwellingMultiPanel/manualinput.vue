@@ -243,6 +243,9 @@ export default {
             this.mid = {}
             this.$store.dispatch('uddwellmulti/setismanualinput', false)
         },
+        deleteitem(item){
+            this.$store.dispatch('uddwellmulti/deleteitem', item)
+        },
         savemanualinputdata(){
             const parent_category = this.parent.filter(q => q.category === this.mid.category)
             this.mid.parent_data = parent_category[0]

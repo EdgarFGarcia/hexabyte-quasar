@@ -29,11 +29,24 @@ export default{
         heating: [],
         loco: [],
         others: [],
-        loadsummary: {}
+        loadsummary: {},
+        defaultitems: [{
+            id:     1,
+            items:  [],
+            name:   'Label 1'
+        }, {
+            id:     2,
+            items:  [],
+            name:   'Label 2'
+        }],
+        selectedpanel: {},
+        issorted: false,
+        nav_voltage_drop: {},
+        supply_to_branch: {},
     },
     mutations: {
         setmanualinputdata(state, payload){
-            state.manualinputdata.push(payload)
+            state.selectedpanel.items.push(payload)
         },
         setclearall(state, payload){
             state.islength = payload
@@ -55,16 +68,16 @@ export default{
             state.selecteddd = payload
         },
         showvoltage(state, payload){
-            state.manualinputdata = [...payload]
+            state.selectedpanel.items = [...payload]
         },
         addvoltamp(state, payload){
-            state.manualinputdata = [...payload]
+            state.selectedpanel.items = [...payload]
         },
         addcurrent(state, payload){
-            state.manualinputdata = [...payload]
+            state.selectedpanel.items = [...payload]
         },
         addcircuitbreaker(state, payload){
-            state.manualinputdata = [...payload]
+            state.selectedpanel.items = [...payload]
         },
         setisvoltage(state, payload){
             state.isvoltage = payload
@@ -104,7 +117,7 @@ export default{
         },
         settwolinewire(state, payload){
             // console.log(payload)
-            state.manualinputdata = [...payload]
+            state.selectedpanel.items = [...payload]
         },
         setprevdatalinetwowire(state, payload){
             state.prevdatalinetwowire = payload
@@ -142,10 +155,10 @@ export default{
             state.isvoltagedrop = payload
         },
         setvoltagedrop(state, payload){
-            state.manualinputdata = [...payload]
+            state.selectedpanel.items = [...payload]
         },
         setvoltagepercent(state, payload){
-            state.manualinputdata = [...payload]
+            state.selectedpanel.items = [...payload]
         },
         setisvoltagepercent(state, payload){
             state.isvoltagepercent = payload
@@ -167,6 +180,38 @@ export default{
         },
         setothers(state, payload){
             state.others.push(payload)
+        },
+        setselectedpanel(state, payload){
+            state.selectedpanel = payload
+        },
+        setissorted(state, payload){
+            state.issorted = payload
+        },
+        delete_child_categories(state, payload){
+            state.selectedpanel = {}
+            state.cooking = []
+            state.cooling = []
+            state.dryer = []
+            state.heating = []
+            state.loco = []
+            state.others = []
+            state.loadsummary = {}
+            state.manualinputdata = []
+        },
+        deleteitem(state, payload){
+            state.selectedpanel.items.splice(payload.index, 1)
+        },
+        insertvoltamp(state, payload){
+            const data = state.selectedpanel.items.filter(q => {
+                return q.id === payload.id
+            })
+            data[0].volt_amp = payload.volt_amp
+        },
+        setnav_voltage_drop(state, payload){
+            state.nav_voltage_drop = payload
+        },
+        setsupply_to_branch(state, payload){
+            state.supply_to_branch = payload
         }
     },
     getters: {
@@ -228,8 +273,7 @@ export default{
             return state.isvoltagepercent
         },
         getloadsummary(state, getters, rootState, rootGetters){
-            const data = state.manualinputdata
-
+            const data = state.selectedpanel.items
             if(data.length == 0){
                 const toreturn = {
                     total:          0,
@@ -272,7 +316,6 @@ export default{
                 state.loadsummary = toreturn
                 return toreturn
             }
-
             // get lo.co data
             const loco = state.loco
             const sumlocova = loco.reduce((n, {volt_amp}) => n + volt_amp, 0)
@@ -465,15 +508,15 @@ export default{
 
             // const categories = rootGetters['categories/getCategories']
             const toreturn = {
-                total:          state.manualinputdata,
+                total:          state.selectedpanel,
                 items: [
                   {
                     name:       'TOTAL VOLT-AMPERE (VA)',
-                    result:     state.manualinputdata.reduce((n, {volt_amp}) => n + volt_amp, 0)
+                    result:     state.selectedpanel.items.reduce((n, {volt_amp}) => n + volt_amp, 0)
                   },
                   {
                     name:       'TOTAL CURRENT (AMP)',
-                    result:     state.manualinputdata.reduce((n, {current}) => n + current, 0)
+                    result:     state.selectedpanel.items.reduce((n, {current}) => n + current, 0)
                   },
                   {
                     name:       'Main Circuit Breaker',
@@ -509,13 +552,26 @@ export default{
             state.loadsummary = toreturn
             return toreturn
         },
+        getmultipanel(state){
+            return state.defaultitems
+        },
+        getselectedpanel(state){
+            return state.selectedpanel
+        },
+        getnav_voltage_drop(state){
+            return state.nav_voltage_drop
+        },
+        getsupply_to_branch(state){
+            return state.supply_to_branch
+        }
         // gettotalcurrent(state){
         //     return state.manualinputdata.reduce((n, {current}) => n + current, 0)
         // }
     },
     actions: {
         setmanualinputdata({commit, state}, payload){
-            const forId = state.manualinputdata.length
+            console.log(state.selectedpanel)
+            const forId = state.selectedpanel.items.length
             payload.id = forId + 1
             if(payload.parent_data.category === 'COOKING'){
                 commit('setcooking', payload)
@@ -553,10 +609,11 @@ export default{
             commit('setispresetdata', payload)
         },
         showvoltage({commit, state}){
-            const addvoltage = state.manualinputdata.map((item) => ({
+            const addvoltage = state.selectedpanel.items.map((item) => ({
                 ...item,
                 voltage: 230
             }))
+            console.log(addvoltage)
             commit('showvoltage', addvoltage)
             // reset all boolean first
             commit('setclearall', false)
@@ -564,7 +621,7 @@ export default{
             commit('setisvoltage', true)
         },
         showvoltampere({commit, state}){
-            const addvoltamp = state.manualinputdata.map((item) => ({
+            const addvoltamp = state.selectedpanel.items.map((item) => ({
                 ...item,
                 volt_amp:  item.frominputpreset === 1 ? (item.pcs * item.va) : item.voltampred * item.pcs
             }))
@@ -573,42 +630,42 @@ export default{
                     const toeditloco = state.loco.filter( l => {
                         return l.id === q.id
                     })
-                    toeditloco[0].volt_amp = q.volt_amp
+                    commit('insertvoltamp', toeditloco[0])
                     return
                 }
                 if(q.parent_data.category === 'COOKING'){
                     const toeditcooking = state.cooking.filter( cook => {
                         return cook.id === q.id
                     })
-                    toeditcooking[0].volt_amp = q.volt_amp
+                    commit('insertvoltamp', toeditcooking[0])
                     return
                 }
                 if(q.parent_data.category === 'COOLING'){
                     const toeditcooling = state.cooling.filter( cool => {
                         return cool.id === q.id
                     })
-                    toeditcooling[0].volt_amp = q.volt_amp
+                    commit('insertvoltamp', toeditcooling[0])
                     return
                 }
                 if(q.parent_data.category === 'DRYER'){
                     const toeditdryer = state.dryer.filter( dry => {
                         return dry.id === q.id
                     })
-                    toeditdryer[0].volt_amp = q.volt_amp
+                    commit('insertvoltamp', toeditdryer[0])
                     return
                 }
                 if(q.parent_data.category === 'HEATING'){
                     const toeditheating = state.heating.filter(heat => {
                         return heat.id === q.id
                     })
-                    toeditheating[0].volt_amp = q.volt_amp
+                    commit('insertvoltamp', toeditheating[0])
                     return
                 }
                 if(q.parent_data.category === 'OTHERS'){
                     const toeditothers = state.others.filter(other => {
                         return other.id === q.id
                     })
-                    toeditothers[0].volt_amp = q.volt_amp
+                    commit('insertvoltamp', toeditothers[0])
                     return
                 }
             })
@@ -619,7 +676,7 @@ export default{
             commit('setisvoltamp', true)
         },
         showcurrent({commit, state}){
-            const addcurrent = state.manualinputdata.map((item) => ({
+            const addcurrent = state.selectedpanel.items.map((item) => ({
                 ...item,
                 current: item.frominputpreset === 1 ? (item.pcs * item.va) / 230 : (item.pcs * item.voltampred) / 230
             }))
@@ -630,7 +687,7 @@ export default{
             commit('setiscurrent', true)
         },
         showcircuitbreaker({commit, state}){
-            const circuitbreaker = state.manualinputdata.map((item) => ({
+            const circuitbreaker = state.selectedpanel.items.map((item) => ({
                 ...item,
                 cctocalculate: item.frominputpreset === 1 ? (item.current * item.multiplier).toFixed(2) : (item.current * 1).toFixed(2),
                 // ccmintocalculate: item.frominputpreset === 1 ? Math.round(item.current * item.multiplier) : Math.round(item.current * 1)
@@ -668,7 +725,7 @@ export default{
             commit('setwiredconduit', payload)
         },
         showtwolines({commit, state}){
-            const wire2lines = state.manualinputdata.map((item) => ({
+            const wire2lines = state.selectedpanel.items.map((item) => ({
                 ...item,
                 cctocalculate: item.frominputpreset === 1 ? (item.current * item.multiplier).toFixed(2) : (item.current * 1).toFixed(2)
             }))
@@ -731,7 +788,7 @@ export default{
             commit('setislength', true)
         },
         showvoltagedrop({commit, state}){
-            const voltagedrop = state.manualinputdata.map((item) => ({
+            const voltagedrop = state.selectedpanel.items.map((item) => ({
                 ...item,
                 voltagedrop: (2 * item.current * item.enterlength * item.resisteance) / 305
             }))
@@ -740,13 +797,68 @@ export default{
             commit('setisvoltagedrop', true)
         },
         showvoltagepercent({commit, state}){
-            const voltagepercent = state.manualinputdata.map((item) => ({
+            const voltagepercent = state.selectedpanel.items.map((item) => ({
                 ...item,
                 voltpercent: (item.voltagedrop / 230) * 100
             }))
             commit('setvoltagepercent', voltagepercent)
             commit('setclearall', false)
             commit('setisvoltagepercent', true)
+        },
+        setselectedpanel({commit}, payload){
+            console.log(payload)
+            commit('setselectedpanel', payload)
+        },
+        sort_data({commit, state}){
+            const selected = state.selectedpanel
+            const issorted = state.issorted
+            console.log('status', issorted)
+            if(!issorted){
+                selected.items.forEach(q => {
+                    commit('setissorted', true)
+                    if(q.category == 'COOKING'){
+                        commit('setcooking', q)
+                    }
+                    if(q.category == 'COOLING'){
+                        commit('setcooling', q)
+                    }
+                    if(q.category == "DRYER"){
+                        commit('setdryer', q)
+                    }
+                    if(q.category == "HEATING"){
+                        commit('setheating', q)
+                    }
+                    if(q.category == "LO.CO"){
+                        commit('setloco', q)
+                    }
+                    if(q.category == "OTHERS"){
+                        commit('setothers', q)
+                    }
+                })
+            }
+        },
+        deleteitem({commit}, payload){
+            commit('deleteitem', payload)
+        },
+        voltagedropmainfeeder({commit,  state}, payload){
+            const data = state.loadsummary
+            const votagedrop = (2 * data.items[1].result * payload * data.resistance) / 305
+            const voltage_drop_percent = (votagedrop / 230) * 100
+            let tp = {
+                voltagedrop: votagedrop,
+                voltage_drop_percent: voltage_drop_percent
+            }
+            commit('setnav_voltage_drop', tp)
+        },
+        supplytobranch({commit, state}, payload){
+            const data = state.wireconduit.filter(q => q.id === payload.wire)
+            const voltagedrop = (2 * payload.current * payload.length * data[0].resistance) / 305
+            const voltage_drop_percent = (voltagedrop / 230) * 100
+            let tp = {
+                voltagedrop: voltagedrop,
+                voltage_drop_percent: voltage_drop_percent
+            }
+            commit('setsupply_to_branch', tp)
         }
     }
 }
