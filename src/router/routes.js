@@ -81,6 +81,18 @@ const routes = [
       }
     ]
   },
+  {
+    path: '/dwelling_multi_main_panel',
+    name: 'dwelling_multi_main_panel',
+    component: () => import('layouts/Dwelling_Multi_Main_Panel.vue'),
+    children: [
+      {
+        path: '',
+        name: 'dwelling_multi_panel_main_calculation',
+        component: () => import('pages/DwellingMultiPanel/main_panel_output.vue')
+      }
+    ]
+  },
   // non dwelling single panel
   {
     path: '/nondwellingsinglepanel',

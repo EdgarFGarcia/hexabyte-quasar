@@ -31,18 +31,22 @@ export default{
         others: [],
         loadsummary: {},
         defaultitems: [{
-            id:     1,
-            items:  [],
-            name:   'Label 1'
+            id:             1,
+            items:          [],
+            name:           'Panel 1',
+            loadsummary:    {}
         }, {
             id:     2,
             items:  [],
-            name:   'Label 2'
+            name:   'Panel 2',
+            loadsummary:    {}
         }],
         selectedpanel: {},
         issorted: false,
         nav_voltage_drop: {},
         supply_to_branch: {},
+        // main panel
+        is_voltage_main_panel: false,
     },
     mutations: {
         setmanualinputdata(state, payload){
@@ -60,6 +64,7 @@ export default{
             state.istwolinewire = payload
             state.isvoltagedrop = payload
             state.isvoltagepercent = payload
+            state.is_voltage_main_panel = payload
         },
         setselectedvariable(state, payload){
             state.selectedvariable = payload
@@ -212,6 +217,15 @@ export default{
         },
         setsupply_to_branch(state, payload){
             state.supply_to_branch = payload
+        },
+        addpanel(state, payload){
+            state.defaultitems.push(payload)
+        },
+        set_showvoltage_main_panel(state, payload){
+            state.is_voltage_main_panel = payload
+        },
+        deletepanel(state, payload){
+            state.defaultitems.splice(payload.index, 1)
         }
     },
     getters: {
@@ -274,6 +288,7 @@ export default{
         },
         getloadsummary(state, getters, rootState, rootGetters){
             const data = state.selectedpanel.items
+            const selectedpanel = state.selectedpanel
             if(data.length == 0){
                 const toreturn = {
                     total:          0,
@@ -314,6 +329,10 @@ export default{
                     resistance:     0
                 }
                 state.loadsummary = toreturn
+                // const multidata = state.defaultitems.filter(q => {
+                //     return q.id === selectedpanel.id
+                // })
+                // multidata[0].loadsummary = toreturn
                 return toreturn
             }
             // get lo.co data
@@ -550,6 +569,11 @@ export default{
                 resistance:     findvaluemainfeeder[0].resistance
             }
             state.loadsummary = toreturn
+            const multidata = state.defaultitems.filter(q => {
+                return q.id === selectedpanel.id
+            })
+            multidata[0].loadsummary.items = toreturn.items
+            multidata[0].loadsummary.resistance = toreturn.resistance
             return toreturn
         },
         getmultipanel(state){
@@ -563,10 +587,14 @@ export default{
         },
         getsupply_to_branch(state){
             return state.supply_to_branch
+        },
+        // main panel
+        get_is_voltage_main_panel(state){
+            return state.is_voltage_main_panel
+        },
+        get_multi_panel_data(state){
+            return state.defaultitems
         }
-        // gettotalcurrent(state){
-        //     return state.manualinputdata.reduce((n, {current}) => n + current, 0)
-        // }
     },
     actions: {
         setmanualinputdata({commit, state}, payload){
@@ -613,7 +641,6 @@ export default{
                 ...item,
                 voltage: 230
             }))
-            console.log(addvoltage)
             commit('showvoltage', addvoltage)
             // reset all boolean first
             commit('setclearall', false)
@@ -859,6 +886,29 @@ export default{
                 voltage_drop_percent: voltage_drop_percent
             }
             commit('setsupply_to_branch', tp)
+        },
+        deletepanel({commit, state}, payload){
+            const data = state.defaultitems.filter(q => q.id === payload.id)
+            commit('deletepanel', data)
+        },
+        addpanel({commit, state}){
+            const data = state.defaultitems.length;
+            let tp = {
+                id:     data + 1,
+                items:  [],
+                name:   'Panel ' + parseInt(data + 1),
+                loadsummary: {}
+            }
+            commit('addpanel', tp)
+        },
+        showvoltage_main_panel({commit}){
+            commit('setclearall', false)
+            commit('set_showvoltage_main_panel', true)
+        },
+        showvoltampere_main_panel({commit, state}){
+            const data = state.defaultitems
+            console.log(data)
+            commit('setclearall', false)
         }
     }
 }

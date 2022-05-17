@@ -5,13 +5,21 @@
       v-for="(btnItem, btnIndex) in getmultipanel"
       :key="btnIndex"
     >
-      <q-btn 
-        @click="opendata(btnItem)" 
-        class="full-width" 
-        color="grey"
-      >
-        {{btnItem.name}}
-      </q-btn>
+      <div class="row">
+        <div class="col-10">
+          <q-btn 
+            @click="opendata(btnItem)" 
+            class="full-width" 
+            color="grey"
+          >
+            {{btnItem.name}}
+          </q-btn>
+        </div>
+        <div class="col-2">
+          <q-icon name="delete" size="sm" @click="deletepanel(btnItem)" style="position: relative; top: 5px; right: 15px;"></q-icon>
+        </div>
+      </div>
+      
     </div>
   </div>
 </template>
@@ -38,6 +46,9 @@ export default {
     opendata(data){
       this.$router.push({name: 'dwellingmulticalculation'})
       this.$store.dispatch('uddwellmulti/setselectedpanel', data)
+    },
+    deletepanel(data){
+      this.$store.dispatch('uddwellmulti/deletepanel', data)
     }
   },
   computed : {

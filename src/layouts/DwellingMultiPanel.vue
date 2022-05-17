@@ -40,9 +40,10 @@
       <div
         class="q-pa-md"
       >
-        <label>MAIN PANEL</label>
+        <!-- <label>MAIN PANEL</label> -->
+        <q-btn class="full-width" color="black" @click="$router.push({name: 'dwelling_multi_main_panel'})">MAIN PANEL</q-btn>
       </div>
-      <q-icon name="add" size="md"></q-icon>
+      <q-icon name="add" size="md" @click="addpanel"></q-icon>
     </q-page-container>
     <router-view/>
   </q-layout>
@@ -105,6 +106,9 @@ export default {
     // this.$store.dispatch('topnav/setshowddcalc', true)
   },
   methods : {
+    addpanel(){
+      this.$store.dispatch('uddwellmulti/addpanel')
+    }
   },
   computed : {
     ...mapGetters({
