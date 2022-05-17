@@ -106,61 +106,91 @@
                             <strong>{{getselectedvariable}}</strong>
                         </div>
                         <div class="col-6" style="background: white;">
-                            <label v-if="getisvoltage" style="color: black;">{{item.category}}</label>
+                            <div v-if="getisvoltage">
+                                <label v-if="item.frominputpreset" style="color: black;">{{item.category}}</label>
+                                <label v-else style="color: black;">{{item.descname}}</label>
+                            </div>
                         </div>
                         <div class="col-6">
                             <strong v-if="getisvoltage">{{item.voltage}}<q-icon name="delete" style="margin-left: 5px;" @click="deleteitem(item)"></q-icon></strong>
                         </div>
                         <div class="col-6" style="background: white;">
-                            <label v-if="getisvoltamp" style="color: black;">{{item.category}}</label>
+                            <div v-if="getisvoltamp">
+                                <label v-if="item.frominputpreset" style="color: black;">{{item.category}}</label>
+                                <label v-else style="color: black;">{{ item.descname }}</label>
+                            </div>
                         </div>
                         <div class="col-6">
                             <strong v-if="getisvoltamp">{{item.volt_amp}}<q-icon name="delete" style="margin-left: 5px;" @click="deleteitem(item)"></q-icon></strong>
                         </div>
                         <div class="col-6" style="background: white;">
-                            <label v-if="getiscurrent" style="color: black;">{{item.category}}</label>
+                            <div v-if="getiscurrent">
+                                <label v-if="item.frominputpreset" style="color: black;">{{item.category}}</label>
+                                <label v-else style="color: black;">{{item.descname}}</label>
+                            </div>
                         </div>
                         <div class="col-6">
                             <strong v-if="getiscurrent">{{item.current}}<q-icon name="delete" style="margin-left: 5px;" @click="deleteitem(item)"></q-icon></strong>
                         </div>
                         <div class="col-6" style="background: white;">
-                            <label v-if="getiscircuitbreaker" style="color: black;">{{item.category}}</label>
+                            <div v-if="getiscircuitbreaker">
+                                <label v-if="item.frominputpreset" style="color: black;">{{item.category}}</label>
+                                <label v-else style="color: black;">{{item.descname}}</label>
+                            </div>
                         </div>
                         <div class="col-6">
                             <strong v-if="getiscircuitbreaker">{{item.at}} AT, {{item.af}} AF, {{item.pole}} POLE <q-icon name="delete" style="margin-left: 5px;" @click="deleteitem(item)"></q-icon></strong><q-icon v-if="getiscircuitbreaker" name="edit" style="margin-left: 5px;" @click="editcircuitbreaker(item)"/>
                         </div>
                         <div class="col-6" style="background: white;">
-                            <strong v-if="getistwolinewire" style="color: black;">{{item.category}}</strong>
+                            <div v-if="getistwolinewire">
+                                <label v-if="item.frominputpreset" style="color: black;">{{item.category}}</label>
+                                <label v-else style="color: black;">{{item.descname}}</label>
+                            </div>
                         </div>
                         <div class="col-6">
                             <strong v-if="getistwolinewire">{{item.line}} <q-icon name="delete" style="margin-left: 5px;" @click="deleteitem(item)"></q-icon></strong><q-icon v-if="getistwolinewire" name="edit" style="margin-left: 5px;" @click="edit2linewire(item)"/>
                         </div>
                         <div class="col-6" style="background: white;">
-                            <strong v-if="getisground" style="color: black;">{{item.category}}</strong>
+                            <div v-if="getisground">
+                                <label v-if="item.frominputpreset" style="color: black;">{{item.category}}</label>
+                                <label v-else style="color: black;">{{item.descname}}</label>
+                            </div>
                         </div>
                         <div class="col-6">
                             <strong v-if="getisground">{{item.ground}}<q-icon name="delete" style="margin-left: 5px;" @click="deleteitem(item)"></q-icon></strong>
                         </div>
                         <div class="col-6" style="background: white;">
-                            <strong v-if="getisconduit" style="color: black;">{{item.category}}</strong>
+                            <div v-if="getisconduit">
+                                <label v-if="item.frominputpreset" style="color: black;">{{item.category}}</label>
+                                <label v-else style="color: black;">{{item.descname}}</label>
+                            </div>
                         </div>
                         <div class="col-6">
                             <strong v-if="getisconduit">{{item.conduit}}<q-icon name="delete" style="margin-left: 5px;" @click="deleteitem(item)"></q-icon></strong>
                         </div>
                         <div class="col-6" style="background: white;">
-                            <strong v-if="getislength" style="color: black;">{{item.category}}</strong>
+                            <div v-if="getislength">
+                                <label v-if="item.frominputpreset" style="color: black;">{{item.category}}</label>
+                                <label v-else style="color: black;">{{item.descname}}</label>
+                            </div>
                         </div>
                         <div class="col-6">
                             <strong v-if="getislength">{{item.enterlength}}<q-icon name="delete" style="margin-left: 5px;" @click="deleteitem(item)"></q-icon></strong>
                         </div>
                         <div class="col-6" style="background: white;">
-                            <strong v-if="getisvoltagedrop" style="color: black;">{{item.category}}</strong>
+                            <div v-if="getisvoltagedrop">
+                                <label v-if="item.frominputpreset" style="color: black;">{{item.category}}</label>
+                                <label v-else style="color: black;">{{item.descname}}</label>
+                            </div>
                         </div>
                         <div class="col-6">
                             <strong v-if="getisvoltagedrop">{{item.voltagedrop}}<q-icon name="delete" style="margin-left: 5px;" @click="deleteitem(item)"></q-icon></strong>
                         </div>
                         <div class="col-6" style="background: white;">
-                            <strong v-if="getisvoltagepercent" style="color: black;">{{item.category}}</strong>
+                            <div v-if="getisvoltagepercent">
+                                <label v-if="item.frominputpreset" style="color: black;">{{item.category}}</label>
+                                <label v-else style="color: black;">{{item.descname}}</label>
+                            </div>
                         </div>
                         <div class="col-6">
                             <strong v-if="getisvoltagepercent">{{item.voltpercent}}<q-icon name="delete" style="margin-left: 5px;" @click="deleteitem(item)"></q-icon></strong>

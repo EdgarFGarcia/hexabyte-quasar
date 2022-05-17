@@ -254,15 +254,15 @@ export default{
             const loco = state.loco
             const sumlocova = loco.reduce((n, {volt_amp}) => n + volt_amp, 0)
             let locoresult = 0
-            if(sumlocova <= 10000){
+            if(sumlocova <= 3000){
                 locoresult = sumlocova
             }
-            if(sumlocova > 10000){
-                locoresult = 10000 + ((sumlocova - 10000) * 0.50)
+            if(sumlocova > 3000 && sumlocova <= 120000){
+                locoresult = 3000 + ((sumlocova - 3000) * 0.35)
             }
-            // if(sumlocova > 120000){
-            //     locoresult = 3000 +((117000) *0.35) + ((sumlocova - 120000) * 0.25)
-            // }
+            if(sumlocova > 120000){
+                locoresult = 3000 +((117000) *0.35) + ((sumlocova - 120000) * 0.25)
+            }
             // end loco
 
             // cooling
@@ -340,10 +340,15 @@ export default{
             const max_range_three = Math.max(...range3.map(r => r.volt_amp))
             const max_range_four = Math.max(...range4.map(r => r.volt_amp))
 
+            // console.log(isFinite(max_range_two), isFinite(max_range_one))
+
             // multipler one
-            const range_one_formula = formula_to_use.filter(q => {
-                return q.from_range <= max_range_one && q.to_range >= max_range_one
-            })
+            let range_one_formula = 0
+            if(isFinite(max_range_one)){
+                range_one_formula = formula_to_use.filter(q => {
+                    return q.from_range <= max_range_one && q.to_range >= max_range_one
+                })
+            }
             let multiplier_one = null
             if(range_one_formula.length > 0){
                 multiplier_one = range_one_formula[0].multiplier.filter(q => {
@@ -353,9 +358,12 @@ export default{
             // end multipler one
 
             // multiplier two
-            const range_two_formula = formula_to_use.filter(q => {
-                return q.from_range <= max_range_two && q.to_range >= max_range_two
-            })
+            let range_two_formula = 0
+            if(isFinite(max_range_two)){
+                range_two_formula = formula_to_use.filter(q => {
+                    return q.from_range <= max_range_two && q.to_range >= max_range_two
+                })
+            }
             let multiplier_two = null
             if(range_two_formula.length > 0){
                 multiplier_two = range_two_formula[0].multiplier.filter(q => {
@@ -365,9 +373,12 @@ export default{
             // end multiplier two
 
             // multiplier three
-            const range_three_formula = formula_to_use.filter(q => {
-                return q.from_range <= max_range_three && q.to_range >= max_range_three
-            })
+            let range_three_formula = 0
+            if(isFinite(max_range_three)){
+                range_three_formula = formula_to_use.filter(q => {
+                    return q.from_range <= max_range_three && q.to_range >= max_range_three
+                })
+            }
             let multiplier_three = null
             if(range_three_formula.length > 0){
                 multiplier_three = range_three_formula[0].multiplier.filter(q => {
@@ -377,9 +388,12 @@ export default{
             // end multiplier three
 
             // multiplier four
-            const range_four_formula = formula_to_use.filter(q => {
-                return q.from_range <= max_range_four && q.to_range >= max_range_four
-            })
+            let range_four_formula = 0
+            if(max_range_four){
+                range_four_formula = formula_to_use.filter(q => {
+                    return q.from_range <= max_range_four && q.to_range >= max_range_four
+                })
+            }
             let multiplier_four = null
             if(range_four_formula.length > 0){
                 multiplier_four = range_four_formula[0].multiplier.filter(q => {
@@ -387,15 +401,28 @@ export default{
                 })
             }
             // end multiplier four
-
             const sum_range_one = range1.reduce((n, {volt_amp}) => n + volt_amp, 0)
-            const sum_range_two = range2.reduce((n, {volt_amp}) => n + volt_amp, 0)
+            const sum_range_two = range2.length != 0 ? range2.reduce((n, {volt_amp}) => n + volt_amp, 0) : 0
             const sum_range_three = range3.reduce((n, {volt_amp}) => n + volt_amp, 0)
 
-            const range_one_result = sum_range_one * multiplier_one[0].multiplier
-            const range_two_result = sum_range_two * multiplier_two[0].multiplier
-            const range_three_result = sum_range_three * multiplier_three[0].multiplier
-            const range_four_result = multiplier_four[0].multiplier
+            console.log(multiplier_two, sum_range_two)
+
+            let range_one_result = 0
+            if(multiplier_one != null && sum_range_one != 0){
+                range_one_result = sum_range_one * multiplier_one[0].multiplier
+            }
+            let range_two_result = 0
+            if(multiplier_two != null && sum_range_two != 0){
+                range_two_result = sum_range_two * multiplier_two[0].multiplier
+            }
+            let range_three_result = 0
+            if(multiplier_three != null && sum_range_three != 0){
+                range_three_result = sum_range_three * multiplier_three[0].multiplier
+            }
+            let range_four_result = 0
+            if(multiplier_four != null){
+                range_four_result = multiplier_four[0].multiplier
+            }
 
             const sum_cooking = parseInt(range_one_result) + parseInt(range_two_result) + parseInt(range_three_result) + parseInt(range_four_result)
             // let main_feeder_result = sum_main_breaker + (high_value * 0.25)

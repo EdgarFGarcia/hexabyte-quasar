@@ -88,7 +88,6 @@ export default {
     this.$store.dispatch('topnav/setisvoltagedrop', true)
   },
   mounted(){
-    console.log('called mounted short circuit')
     this.$store.dispatch('topnav/setshowddcalc', false)
     this.$store.dispatch('topnav/setnavigationchild', 'VOLTAGE DROP')
     this.$store.dispatch('topnav/setisvoltagedrop', true)
