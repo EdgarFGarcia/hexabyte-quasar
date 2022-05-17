@@ -1,4 +1,4 @@
-const base = 'http://54.251.142.171/api/'
+const base = 'https://api.hexabyte.club/api/'
 
 export default {
   base,

@@ -10,6 +10,7 @@
           aria-label="Menu"
           @click="leftDrawerOpen = !leftDrawerOpen"
         />
+
         <q-toolbar-title>
           <small>{{getnavigation.parent}} - {{getnavigation.title}} {{getnavigation.child}}</small>
         </q-toolbar-title>
@@ -106,7 +107,7 @@ const linksData = [
   {
     title: 'Home',
     caption: 'home',
-    router: 'home',
+    router: '/homenondwellingsingle',
     icon: 'home'
   },
   {
@@ -248,52 +249,52 @@ export default {
   methods : {
     onClick(data){
       if(data === 'ipd'){
-        this.$store.dispatch('userdata/setispresetdata', true)
+        this.$store.dispatch('ndsingle/setispresetdata', true)
       }else if(data === 'mid'){
-        this.$store.dispatch('userdata/setismanualinput', true)
+        this.$store.dispatch('ndsingle/setismanualinput', true)
       }
     },
     onItemClick(data){
-      this.$store.dispatch('userdata/setselectedvariable', data.title)
+      this.$store.dispatch('ndsingle/setselectedvariable', data.title)
       switch(data.id){
         case 1:
-          this.$store.dispatch('userdata/showvoltage')
+          this.$store.dispatch('ndsingle/showvoltage')
           break;
         case 2:
-          this.$store.dispatch('userdata/showvoltampere')
+          this.$store.dispatch('ndsingle/showvoltampere')
           break;
         case 3:
-          this.$store.dispatch('userdata/showcurrent')
+          this.$store.dispatch('ndsingle/showcurrent')
           break;
         case 4:
-          this.$store.dispatch('userdata/showcircuitbreaker')
+          this.$store.dispatch('ndsingle/showcircuitbreaker')
           break;
         case 5:
-          this.$store.dispatch('userdata/showtwolines')
+          this.$store.dispatch('ndsingle/showtwolines')
           break;
         case 6:
-          this.$store.dispatch('userdata/showgoundwire')
+          this.$store.dispatch('ndsingle/showgoundwire')
           break;
         case 7:
-          this.$store.dispatch('userdata/showconduit')
+          this.$store.dispatch('ndsingle/showconduit')
           break;
         case 8:
-          this.$store.dispatch('userdata/showlength')
+          this.$store.dispatch('ndsingle/showlength')
           break;
         case 9:
-          this.$store.dispatch('userdata/showvoltagedrop')
+          this.$store.dispatch('ndsingle/showvoltagedrop')
           break;
         case 10:
-          this.$store.dispatch('userdata/showvoltagepercent')
+          this.$store.dispatch('ndsingle/showvoltagepercent')
           break;
       }
-      this.$store.dispatch('userdata/setselecteddd', data)
+      this.$store.dispatch('ndsingle/setselecteddd', data)
     },
   },
   computed : {
     ...mapGetters({
       categories:             'categories/getCategories',
-      selecteddd:             'userdata/getselecteddd',
+      selecteddd:             'ndsingle/getselecteddd',
       getnavigation:          'topnav/getnavigation',
       getshowddcalc:          'topnav/getshowddcalc'
     })

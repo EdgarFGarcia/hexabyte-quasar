@@ -92,7 +92,7 @@
             <q-card
                 class="my-card"
                 style="margin-bottom: 8px;"
-                v-for="(item, itemindex) in miduser.items"
+                v-for="(item, itemindex) in miduser"
                 :key="itemindex"
                 :flat="true"
                 :dark="true"
@@ -203,26 +203,22 @@ export default {
         this.$store.dispatch('topnav/setshowddcalc', true)
         this.$store.dispatch('topnav/setisloadsummary', false)
         this.$store.dispatch('topnav/setnavigationchild', '')
-        this.sortdata()
     },
     methods : {
-        sortdata(){
-            this.$store.dispatch('uddwellmulti/sort_data')
-        },
         cancelmid(){
             this.mid = {}
-            this.$store.dispatch('uddwellmulti/setismanualinput', false)
+            this.$store.dispatch('ndsingle/setismanualinput', false)
         },
         savemanualinputdata(){
             const parent_category = this.parent.filter(q => q.category === this.mid.category)
             this.mid.parent_data = parent_category[0]
-            this.$store.dispatch('uddwellmulti/setmanualinputdata', this.mid)
+            this.$store.dispatch('ndsingle/setmanualinputdata', this.mid)
             this.mid = {}
-            this.$store.dispatch('uddwellmulti/setismanualinput', false)
+            this.$store.dispatch('ndsingle/setismanualinput', false)
         },
         cancelpd(){
             this.mid = {}
-            this.$store.dispatch('uddwellmulti/setispresetdata', false)
+            this.$store.dispatch('ndsingle/setispresetdata', false)
         },
         savepd(){
             this.mid.frominputpreset = 1
@@ -233,9 +229,9 @@ export default {
             this.mid.parent_data = parent[0]
             this.mid.va = va[0].va
             this.mid.multiplier = va[0].multiplier
-            this.$store.dispatch('uddwellmulti/setmanualinputdata', this.mid)
+            this.$store.dispatch('ndsingle/setmanualinputdata', this.mid)
             this.mid = {}
-            this.$store.dispatch('uddwellmulti/setispresetdata', false)
+            this.$store.dispatch('ndsingle/setispresetdata', false)
         },
         filterchild(val, update){
             update(() => {
@@ -247,18 +243,18 @@ export default {
             })
         },
         editcircuitbreaker(data){
-            this.$store.dispatch('uddwellmulti/setprevdatacircuitbreaker', data)
+            this.$store.dispatch('ndsingle/setprevdatacircuitbreaker', data)
             this.changecircuitbreaker = true
         },
         cancelcb(){
             this.changecircuitbreaker = false
         },
         savecb(){
-            this.$store.dispatch('uddwellmulti/editcircuitbreaker', this.circuitbreaker)
+            this.$store.dispatch('ndsingle/editcircuitbreaker', this.circuitbreaker)
             this.changecircuitbreaker = false
         },
         edit2linewire(data){
-            this.$store.dispatch('uddwellmulti/setprevdatalinetwowire', data)
+            this.$store.dispatch('ndsingle/setprevdatalinetwowire', data)
             this.changetwowire = true
         },
         cancelwire(){
@@ -266,7 +262,7 @@ export default {
         },
         savewire(){
             // console.log(this.twolinewire)
-            this.$store.dispatch('uddwellmulti/editlinewire', this.twolinewire)
+            this.$store.dispatch('ndsingle/editlinewire', this.twolinewire)
             this.changetwowire = false
         }
     },
@@ -275,22 +271,22 @@ export default {
             parent:                 'categories/getCategories',
             parent_categories:      'categories/getparent_categories',
             getchild_categories:    'categories/getchild_categories',
-            getselectedvariable:    'uddwellmulti/getselectedvariable',
-            miduser:                'uddwellmulti/getselectedpanel',
-            getcbreaker:            'uddwellmulti/getcbreaker',
-            getisvoltage:           'uddwellmulti/getisvoltage',
-            getisvoltamp:           'uddwellmulti/getisvoltamp',
-            getiscurrent:           'uddwellmulti/getiscurrent',
-            getismanualinput:       'uddwellmulti/getismanualinput',
-            getispresetdata:        'uddwellmulti/getispresetdata',
-            getiscircuitbreaker:    'uddwellmulti/getiscircuitbreaker',
-            getistwolinewire:       'uddwellmulti/getistwolinewire',
-            getwiredconduit:        'uddwellmulti/getwiredconduit',
-            getisground:            'uddwellmulti/getisground',
-            getisconduit:           'uddwellmulti/getisconduit',
-            getislength:            'uddwellmulti/getislength',
-            getisvoltagedrop:       'uddwellmulti/getisvoltagedrop',
-            getisvoltagepercent:    'uddwellmulti/getisvoltagepercent',
+            getselectedvariable:    'ndsingle/getselectedvariable',
+            miduser:                'ndsingle/getmanualinputdata',
+            getcbreaker:            'ndsingle/getcbreaker',
+            getisvoltage:           'ndsingle/getisvoltage',
+            getisvoltamp:           'ndsingle/getisvoltamp',
+            getiscurrent:           'ndsingle/getiscurrent',
+            getismanualinput:       'ndsingle/getismanualinput',
+            getispresetdata:        'ndsingle/getispresetdata',
+            getiscircuitbreaker:    'ndsingle/getiscircuitbreaker',
+            getistwolinewire:       'ndsingle/getistwolinewire',
+            getwiredconduit:        'ndsingle/getwiredconduit',
+            getisground:            'ndsingle/getisground',
+            getisconduit:           'ndsingle/getisconduit',
+            getislength:            'ndsingle/getislength',
+            getisvoltagedrop:       'ndsingle/getisvoltagedrop',
+            getisvoltagepercent:    'ndsingle/getisvoltagepercent',
         }),
     }
 }

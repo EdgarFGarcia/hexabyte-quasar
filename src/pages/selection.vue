@@ -1,5 +1,5 @@
 <template>
-    <div class="fullscreen bg-grey text-white text-center q-pa-md flex flex-center">
+  <div class="fullscreen bg-grey text-white text-center q-pa-md flex flex-center">
     <div>
         <div style="font-size: 3vh">
             Single Phase
@@ -78,12 +78,20 @@ export default {
   },
   methods: {
     onItemClick(data){
-      console.log(data)
-      if(data.id == 1){
-        this.$router.push({name: 'home'})
+      if(data.parent == 'DWELLING'){
+        if(data.id == 1){
+          this.$router.push({name: 'home'})
+        }
       }
-      if(data.id == 2){
-        this.$router.push({name: 'dwellingmultipanel'})
+      if(data.parent == 'DWELLING'){
+        if(data.id == 2){
+          this.$router.push({name: 'selectiondwelling'})
+        }
+      }
+      if(data.parent == 'NON-DWELLING'){
+        if(data.id == 1){
+          this.$router.push({name: '/nondwellingsinglepanel'})
+        }
       }
       this.$store.dispatch('topnav/setshowddcalc', true)
       this.$store.dispatch('topnav/setnavigation', data)
@@ -458,12 +466,16 @@ export default {
       .then(({data}) => {
         if(data.response){
           this.$store.dispatch('userdata/setcbreaker', data.data)
+          this.$store.dispatch('ndsingle/setcbreaker', data.data)
+          this.$store.dispatch('uddwellmulti/setcbreaker', data.data)
         }
       })
       await this.$get(this, 'mobile/getWireConduit')
       .then(({data}) => {
         if(data.response){
           this.$store.dispatch('userdata/setwiredconduit', data.data)
+          this.$store.dispatch('ndsingle/setwiredconduit', data.data)
+          this.$store.dispatch('uddwellmulti/setwiredconduit', data.data)
         }
       })
       await this.$get(this, 'mobile/getKaic')

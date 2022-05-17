@@ -11,6 +11,9 @@ import topnav from './values/navrelated.js'
 // dwelling multipanel store
 import uddwellmulti from './values/dwellingmultipanel.js'
 
+// nondwelling
+import nondwellingsinglepanel from './values/nondwellingsingle.js'
+
 Vue.use(Vuex)
 
 /*
@@ -29,6 +32,7 @@ export default function (/* { ssrContext } */) {
       categories:     categories,
       userdata:       userdata,
       uddwellmulti:   uddwellmulti,
+      ndsingle:       nondwellingsinglepanel,
       topnav:         topnav
     },
     plugins: [createPersistedState()],

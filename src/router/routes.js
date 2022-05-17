@@ -36,6 +36,7 @@ const routes = [
       }
     ],
   },
+  // dwelling multi panel
   {
     path: '/dwellingmultipanel',
     name: 'dwellingmultipanel',
@@ -43,8 +44,68 @@ const routes = [
     children: [
       {
         path: '',
-        name: 'home',
+        name: 'selectiondwelling',
+        component: () => import('pages/DwellingMultiPanel/panelselection.vue')
+      },
+      {
+        path: 'opendwellingmulti',
+        name: 'opendwellingmulti',
         component: () => import('pages/DwellingMultiPanel/manualinput.vue')
+      }
+    ]
+  },
+  {
+    path: '/dwellingmulticalculation',
+    name: 'dwellingmulticalculation',
+    component: () => import('layouts/DwellingMultiPanelCalculation.vue'),
+    children: [
+      {
+        path: '',
+        name: '/homedwellingmulticalculation',
+        component: () => import('pages/DwellingMultiPanel/manualinput.vue')
+      },
+      {
+        path: 'loadsummarydwellingmultipanel',
+        name: 'loadsummarydwellingmultipanel',
+        component: () => import('pages/DwellingMultiPanel/loadsummary.vue')
+      },
+      {
+        path: 'voltagedropdwellingmultipanel',
+        name: 'voltagedropdwellingmultipanel',
+        component: () => import('pages/DwellingMultiPanel/voltagedrop.vue')
+      },
+      {
+        path: 'shortcircuitdwellingmultipanel',
+        name: 'shortcircuitdwellingmultipanel',
+        component: () => import('pages/DwellingMultiPanel/shortcircuit.vue')
+      }
+    ]
+  },
+  // non dwelling single panel
+  {
+    path: '/nondwellingsinglepanel',
+    name: '/nondwellingsinglepanel',
+    component: () => import ('layouts/NonDwellingSinglePanel.vue'),
+    children: [
+      {
+        path: '',
+        name: 'homenondwellingsingle',
+        component: () => import('pages/NonDwellingSinglePanel/manualinput.vue')
+      },
+      {
+        path: 'loadsummary',
+        name: 'loadsummarynondwellingsingle',
+        component: () => import('pages/NonDwellingSinglePanel/loadsummary.vue')
+      },
+      {
+        path: 'voltagedrop',
+        name: 'voltagedropnondwellingsingle',
+        component: () => import('pages/NonDwellingSinglePanel/voltagedrop.vue')
+      },
+      {
+        path: 'shortcircuit',
+        name: 'shortcircuitnondwellingsingle',
+        component: () => import('pages/NonDwellingSinglePanel/shortcircuit.vue')
       }
     ]
   },

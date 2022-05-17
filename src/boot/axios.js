@@ -11,7 +11,7 @@ const setupHeaderConfig = (config) => {
   // -------------------------------------------------------------
   config.withCredentials = false
   // config.baseURL = 'https://api.orderbuddy.dk/api/'
-  config.baseURL = 'http://54.251.142.171/api/'
+  config.baseURL = 'https://api.hexabyte.club/api/'
   return config
 }
 

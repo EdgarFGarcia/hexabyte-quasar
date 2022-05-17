@@ -104,40 +104,40 @@ import EssentialLink from 'components/EssentialLink.vue'
 import { mapGetters } from 'vuex'
 const linksData = [
   {
-    title: 'Home',
-    caption: 'home',
-    router: 'home',
+    title: 'Reload',
+    caption: 'reload | go home',
+    router: '/homedwellingmulticalculation',
     icon: 'home'
   },
   {
     title: 'Load Summary',
     caption: 'load summary',
-    router: 'loadsummary',
+    router: 'loadsummarydwellingmultipanel',
     icon: 'summarize',
   },
   {
     title: 'Voltage Drop',
     caption: 'voltage drop',
-    router: 'voltagedrop',
+    router: 'voltagedropdwellingmultipanel',
     icon: 'ev_station',
   },
   {
     title: 'Short Circuit',
     caption: 'short circuit',
-    router: 'shortcircuit',
+    router: 'shortcircuitdwellingmultipanel',
     icon: 'account_tree',
   },
   {
     title: 'Save',
     caption: 'save',
-    router: 'save',
-    icon: 'save',
+    router: 'savedwellingmultipnale',
+    icon: 'save'
   },
   {
-    title: 'Save As',
-    caption: 'save as',
-    router: 'saveas',
-    icon: 'save',
+    title: 'Save as',
+    caption: 'saveas',
+    router: 'saveasdwellingmultipnale',
+    icon: 'save'
   },
   {
     title: 'Print',
@@ -154,7 +154,7 @@ const linksData = [
   {
     title: 'Back',
     caption: 'Go To Selection Page',
-    router: 'selection',
+    router: 'selectiondwelling',
     icon: 'arrow_left'
   }
 ];
@@ -238,62 +238,58 @@ export default {
     }
   },
   mounted () {
-    // console.log('here mounted')
-    // this.$store.dispatch('topnav/setshowddcalc', true)
   },
   created () {
-    // console.log('here')
-    // this.$store.dispatch('topnav/setshowddcalc', true)
   },
   methods : {
     onClick(data){
       if(data === 'ipd'){
-        this.$store.dispatch('userdata/setispresetdata', true)
+        this.$store.dispatch('uddwellmulti/setispresetdata', true)
       }else if(data === 'mid'){
-        this.$store.dispatch('userdata/setismanualinput', true)
+        this.$store.dispatch('uddwellmulti/setismanualinput', true)
       }
     },
     onItemClick(data){
-      this.$store.dispatch('userdata/setselectedvariable', data.title)
+      this.$store.dispatch('uddwellmulti/setselectedvariable', data.title)
       switch(data.id){
         case 1:
-          this.$store.dispatch('userdata/showvoltage')
+          this.$store.dispatch('uddwellmulti/showvoltage')
           break;
         case 2:
-          this.$store.dispatch('userdata/showvoltampere')
+          this.$store.dispatch('uddwellmulti/showvoltampere')
           break;
         case 3:
-          this.$store.dispatch('userdata/showcurrent')
+          this.$store.dispatch('uddwellmulti/showcurrent')
           break;
         case 4:
-          this.$store.dispatch('userdata/showcircuitbreaker')
+          this.$store.dispatch('uddwellmulti/showcircuitbreaker')
           break;
         case 5:
-          this.$store.dispatch('userdata/showtwolines')
+          this.$store.dispatch('uddwellmulti/showtwolines')
           break;
         case 6:
-          this.$store.dispatch('userdata/showgoundwire')
+          this.$store.dispatch('uddwellmulti/showgoundwire')
           break;
         case 7:
-          this.$store.dispatch('userdata/showconduit')
+          this.$store.dispatch('uddwellmulti/showconduit')
           break;
         case 8:
-          this.$store.dispatch('userdata/showlength')
+          this.$store.dispatch('uddwellmulti/showlength')
           break;
         case 9:
-          this.$store.dispatch('userdata/showvoltagedrop')
+          this.$store.dispatch('uddwellmulti/showvoltagedrop')
           break;
         case 10:
-          this.$store.dispatch('userdata/showvoltagepercent')
+          this.$store.dispatch('uddwellmulti/showvoltagepercent')
           break;
       }
-      this.$store.dispatch('userdata/setselecteddd', data)
+      this.$store.dispatch('uddwellmulti/setselecteddd', data)
     },
   },
   computed : {
     ...mapGetters({
       categories:             'categories/getCategories',
-      selecteddd:             'userdata/getselecteddd',
+      selecteddd:             'uddwellmulti/getselecteddd',
       getnavigation:          'topnav/getnavigation',
       getshowddcalc:          'topnav/getshowddcalc'
     })
