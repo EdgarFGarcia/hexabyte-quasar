@@ -250,19 +250,19 @@ export default {
           this.$store.dispatch('uddwellmulti/showvoltampere_main_panel')
           break;
         case 3:
-          this.$store.dispatch('uddwellmulti/showcurrent')
+          this.$store.dispatch('uddwellmulti/showcurrent_main_panel')
           break;
         case 4:
-          this.$store.dispatch('uddwellmulti/showcircuitbreaker')
+          this.$store.dispatch('uddwellmulti/showcircuitbreaker_main_panel')
           break;
         case 5:
-          this.$store.dispatch('uddwellmulti/showtwolines')
+          this.$store.dispatch('uddwellmulti/showtwolines_main_panel')
           break;
         case 6:
-          this.$store.dispatch('uddwellmulti/showgoundwire')
+          this.$store.dispatch('uddwellmulti/showgoundwire_main_panel')
           break;
         case 7:
-          this.$store.dispatch('uddwellmulti/showconduit')
+          this.$store.dispatch('uddwellmulti/showconduit_main_panel')
           break;
         case 8:
           this.$store.dispatch('uddwellmulti/showlength')

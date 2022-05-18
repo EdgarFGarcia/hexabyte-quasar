@@ -47,6 +47,12 @@ export default{
         supply_to_branch: {},
         // main panel
         is_voltage_main_panel: false,
+        is_volt_amp_panel: false,
+        is_current_total: false,
+        is_breaker_main_panel: false,
+        is_line_two_wire_main_panel: false,
+        is_ground_wire_main_panel: false,
+        is_conduit_main_panel: false
     },
     mutations: {
         setmanualinputdata(state, payload){
@@ -65,6 +71,12 @@ export default{
             state.isvoltagedrop = payload
             state.isvoltagepercent = payload
             state.is_voltage_main_panel = payload
+            state.is_volt_amp_panel = payload
+            state.is_current_total = payload
+            state.is_breaker_main_panel = payload
+            state.is_line_two_wire_main_panel = payload
+            state.is_ground_wire_main_panel = payload
+            state.is_conduit_main_panel = payload
         },
         setselectedvariable(state, payload){
             state.selectedvariable = payload
@@ -223,6 +235,24 @@ export default{
         },
         set_showvoltage_main_panel(state, payload){
             state.is_voltage_main_panel = payload
+        },
+        set_is_volt_amp_panel(state, payload){
+            state.is_volt_amp_panel = payload
+        },
+        set_is_current_total(state, payload){
+            state.is_current_total = payload  
+        },
+        set_is_breaker_main_panel(state, payload){
+            state.is_breaker_main_panel = payload
+        },
+        set_is_line_two_wire_main_panel(state, payload){
+            state.is_line_two_wire_main_panel = payload
+        },
+        set_is_ground_wire_main_panel(state, payload){
+            state.is_ground_wire_main_panel = payload
+        },
+        set_is_conduit_main_panel(state, payload){
+            state.is_conduit_main_panel = payload
         },
         deletepanel(state, payload){
             state.defaultitems.splice(payload.index, 1)
@@ -592,6 +622,24 @@ export default{
         get_is_voltage_main_panel(state){
             return state.is_voltage_main_panel
         },
+        get_is_volt_amp_panel(state){
+            return state.is_volt_amp_panel
+        },
+        get_is_current_total(state){
+            return state.is_current_total
+        },
+        get_is_breaker_main_panel(state){
+            return state.is_breaker_main_panel
+        },
+        get_is_line_two_wire_main_panel(state){
+            return state.is_line_two_wire_main_panel
+        },
+        get_is_ground_wire_main_panel(state){
+            return state.is_ground_wire_main_panel
+        },
+        get_is_conduit_main_panel(state){
+            return state.is_conduit_main_panel
+        },
         get_multi_panel_data(state){
             return state.defaultitems
         }
@@ -907,8 +955,91 @@ export default{
         },
         showvoltampere_main_panel({commit, state}){
             const data = state.defaultitems
-            console.log(data)
+            data.forEach(q => {
+                let volt_amp_total = 0
+                q.items.forEach(qq => {
+                    volt_amp_total = volt_amp_total + qq.volt_amp
+                })
+                // console.log(volt_amp_total, q)
+                q.total_volt_amp = volt_amp_total
+            })
             commit('setclearall', false)
+            commit('set_is_volt_amp_panel', true)
+        },
+        showcurrent_main_panel({commit, state}){
+            const data = state.defaultitems
+            data.forEach(q => {
+                let current_total = 0
+                const loadsummary = q['loadsummary']
+                loadsummary.items.forEach(qq => {
+                    if(qq.name == 'TOTAL CURRENT (AMP)'){
+                        current_total = qq.result
+                    }
+                })
+                q.current_total = current_total
+            })
+            commit('setclearall', false)
+            commit('set_is_current_total', true)
+        },
+        showcircuitbreaker_main_panel({commit, state}){
+            const data = state.defaultitems
+            data.forEach(q => {
+                let main_breaker = ""
+                const loadsummary = q['loadsummary']
+                loadsummary.items.forEach(qq => {
+                    if(qq.name == 'Main Circuit Breaker'){
+                        main_breaker = qq.result
+                    }
+                })
+                q.main_breaker = main_breaker
+            })
+            commit('setclearall', false)
+            commit('set_is_breaker_main_panel', true)
+        },
+        showtwolines_main_panel({commit, state}){
+            const data = state.defaultitems
+            data.forEach(q => {
+                let line_two_wire = ""
+                const loadsummary = q['loadsummary']
+                loadsummary.items.forEach(qq => {
+                    if(qq.name == 'Main Feeder'){
+                        line_two_wire = qq.result
+                    }
+                })
+                q.line_two_wire = line_two_wire
+            })
+            commit('setclearall', false)
+            commit('set_is_line_two_wire_main_panel', true)
+        },
+        showgoundwire_main_panel({commit, state}){
+            const data = state.defaultitems
+            data.forEach(q => {
+                let ground_wire = ""
+                const loadsummary = q['loadsummary']
+                loadsummary.items.forEach(qq => {
+                    if(qq.name == 'Service Ground (1 Wire)'){
+                        ground_wire = qq.result
+                    }
+                })
+                q.ground_wire = ground_wire
+            })
+            commit('setclearall', false)
+            commit('set_is_ground_wire_main_panel', true)
+        },
+        showconduit_main_panel({commit, state}){
+            const data = state.defaultitems
+            data.forEach(q => {
+                let conduit = ""
+                const loadsummary = q['loadsummary']
+                loadsummary.items.forEach(qq => {
+                    if(qq.name == 'Conduit'){
+                        conduit = qq.result
+                    }
+                })
+                q.conduit = conduit
+            })
+            commit('setclearall', false)
+            commit('set_is_conduit_main_panel', true)
         }
     }
 }
