@@ -168,6 +168,72 @@
                         </div>
                     </div>
                     <!-- end conduit -->
+                    <!-- main length -->
+                    <div v-if="get_is_length_main_panel">
+                        <!-- {{get_multi_panel_data[0].total_volt_amp}} -->
+                        <div class="col-6">
+                            Description:
+                        </div>
+                        <div class="col-6" style="background: white; color: black;">
+                            <strong>Current (AMP)</strong>
+                        </div>
+                        <div
+                            v-for="(item, itemindex) in get_multi_panel_data"
+                            :key="itemindex"
+                        >
+                            <div class="col-6" style="margin-top: 10px;">
+                                {{item.name}}
+                            </div>
+                            <div class="col-6" style="background: white; color: black; margin-top: 10px;">
+                                <strong>{{item.vdlength}}</strong>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end length -->
+                    <!-- main voltage drop -->
+                    <div v-if="get_is_voltage_drop_main_panel">
+                        <!-- {{get_multi_panel_data[0].total_volt_amp}} -->
+                        <div class="col-6">
+                            Description:
+                        </div>
+                        <div class="col-6" style="background: white; color: black;">
+                            <strong>Current (AMP)</strong>
+                        </div>
+                        <div
+                            v-for="(item, itemindex) in get_multi_panel_data"
+                            :key="itemindex"
+                        >
+                            <div class="col-6" style="margin-top: 10px;">
+                                {{item.name}}
+                            </div>
+                            <div class="col-6" style="background: white; color: black; margin-top: 10px;">
+                                <strong>{{item.voltagedrop}}</strong>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end voltage drop -->
+                    <!-- main voltage drop % -->
+                    <div v-if="get_is_voltage_percent_main_panel">
+                        <!-- {{get_multi_panel_data[0].total_volt_amp}} -->
+                        <div class="col-6">
+                            Description:
+                        </div>
+                        <div class="col-6" style="background: white; color: black;">
+                            <strong>Current (AMP)</strong>
+                        </div>
+                        <div
+                            v-for="(item, itemindex) in get_multi_panel_data"
+                            :key="itemindex"
+                        >
+                            <div class="col-6" style="margin-top: 10px;">
+                                {{item.name}}
+                            </div>
+                            <div class="col-6" style="background: white; color: black; margin-top: 10px;">
+                                <strong>{{item.voltagedrop_percent}}</strong>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end voltage drop % -->
                 </q-card-section>
             </q-card>
         </div>
@@ -217,7 +283,10 @@ export default {
             get_is_breaker_main_panel:              'uddwellmulti/get_is_breaker_main_panel',
             get_is_line_two_wire_main_panel:        'uddwellmulti/get_is_line_two_wire_main_panel',
             get_is_ground_wire_main_panel:          'uddwellmulti/get_is_ground_wire_main_panel',
-            get_is_conduit_main_panel:              'uddwellmulti/get_is_conduit_main_panel'
+            get_is_conduit_main_panel:              'uddwellmulti/get_is_conduit_main_panel',
+            get_is_length_main_panel:               'uddwellmulti/get_is_length_main_panel',
+            get_is_voltage_drop_main_panel:         'uddwellmulti/get_is_voltage_drop_main_panel',
+            get_is_voltage_percent_main_panel:      'uddwellmulti/get_is_voltage_percent_main_panel'
         })
     }
 }

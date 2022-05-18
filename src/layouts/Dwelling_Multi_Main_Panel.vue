@@ -265,13 +265,13 @@ export default {
           this.$store.dispatch('uddwellmulti/showconduit_main_panel')
           break;
         case 8:
-          this.$store.dispatch('uddwellmulti/showlength')
+          this.$store.dispatch('uddwellmulti/showlength_main_length')
           break;
         case 9:
-          this.$store.dispatch('uddwellmulti/showvoltagedrop')
+          this.$store.dispatch('uddwellmulti/showvoltagedrop_main_panel')
           break;
         case 10:
-          this.$store.dispatch('uddwellmulti/showvoltagepercent')
+          this.$store.dispatch('uddwellmulti/showvoltagepercent_main_panel')
           break;
       }
       this.$store.dispatch('uddwellmulti/setselecteddd', data)

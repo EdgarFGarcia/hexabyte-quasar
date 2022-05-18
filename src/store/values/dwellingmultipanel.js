@@ -52,7 +52,10 @@ export default{
         is_breaker_main_panel: false,
         is_line_two_wire_main_panel: false,
         is_ground_wire_main_panel: false,
-        is_conduit_main_panel: false
+        is_conduit_main_panel: false,
+        is_length_main_panel: false,
+        is_voltage_drop_main_panel: false,
+        is_voltage_percent_main_panel: false
     },
     mutations: {
         setmanualinputdata(state, payload){
@@ -77,6 +80,9 @@ export default{
             state.is_line_two_wire_main_panel = payload
             state.is_ground_wire_main_panel = payload
             state.is_conduit_main_panel = payload
+            state.is_length_main_panel = payload
+            state.is_voltage_drop_main_panel = payload
+            state.is_voltage_percent_main_panel = payload
         },
         setselectedvariable(state, payload){
             state.selectedvariable = payload
@@ -253,6 +259,15 @@ export default{
         },
         set_is_conduit_main_panel(state, payload){
             state.is_conduit_main_panel = payload
+        },
+        set_is_length_main_panel(state, payload){
+            state.is_length_main_panel = payload
+        },
+        set_is_voltage_drop_main_panel(state, payload){
+            state.is_voltage_drop_main_panel = payload
+        },
+        set_is_voltage_percent_main_panel(state, payload){
+            state.is_voltage_percent_main_panel = payload
         },
         deletepanel(state, payload){
             state.defaultitems.splice(payload.index, 1)
@@ -640,6 +655,15 @@ export default{
         get_is_conduit_main_panel(state){
             return state.is_conduit_main_panel
         },
+        get_is_length_main_panel(state){
+            return state.is_length_main_panel
+        },
+        get_is_voltage_drop_main_panel(state){
+            return state.is_voltage_drop_main_panel
+        },
+        get_is_voltage_percent_main_panel(state){
+            return state.is_voltage_percent_main_panel
+        },
         get_multi_panel_data(state){
             return state.defaultitems
         }
@@ -917,12 +941,20 @@ export default{
         },
         voltagedropmainfeeder({commit,  state}, payload){
             const data = state.loadsummary
+            const data_selected_panel = state.selectedpanel
+            const defaultdata = state.defaultitems
+            defaultdata.forEach(q => {
+                return q.id === payload
+            })
+            defaultdata[0].vdlength = payload
             const votagedrop = (2 * data.items[1].result * payload * data.resistance) / 305
             const voltage_drop_percent = (votagedrop / 230) * 100
             let tp = {
                 voltagedrop: votagedrop,
                 voltage_drop_percent: voltage_drop_percent
             }
+            defaultdata[0].voltagedrop = tp.voltagedrop
+            defaultdata[0].voltagedrop_percent = tp.voltage_drop_percent
             commit('setnav_voltage_drop', tp)
         },
         supplytobranch({commit, state}, payload){
@@ -1040,6 +1072,18 @@ export default{
             })
             commit('setclearall', false)
             commit('set_is_conduit_main_panel', true)
+        },
+        showlength_main_length({commit}){
+            commit('setclearall', false)
+            commit('set_is_length_main_panel', true)
+        },
+        showvoltagedrop_main_panel({commit}){
+            commit('setclearall', false)
+            commit('set_is_voltage_drop_main_panel', true)
+        },
+        showvoltagepercent_main_panel({commit}){
+            commit('setclearall', false)
+            commit('set_is_voltage_percent_main_panel', true)
         }
     }
 }
